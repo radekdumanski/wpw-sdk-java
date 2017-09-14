@@ -1,3 +1,6 @@
 [submodule "wpwithin/iot-core-component"]
 	path = wpwithin/iot-core-component
 	url = https://github.com/WPTechInnovation/wpw-sdk-iot-core.git
+[submodule "wpwithin/wpw-sdk-thrift"]
+	path = wpwithin/wpw-sdk-thrift
+	url = https://github.com/WPTechInnovation/wpw-sdk-thrift.git
