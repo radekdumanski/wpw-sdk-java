@@ -13,7 +13,5 @@
   	<module>sample-consumer</module>
   	<module>sample-producer</module>
   	<module>sample-producer-callbacks</module>
-  	<module>car-charger</module>
-  	<module>car-example</module>
   </modules>
 </project>
