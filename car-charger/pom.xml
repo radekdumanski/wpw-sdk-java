@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.worldpay.innovation</groupId>
-		<artifactId>wpwithin</artifactId>
+		<artifactId>wpw-sdk-java</artifactId>
 		<version>0.0.1-alpha</version>
 	</parent>
 	<groupId>com.worldpay.innovation</groupId>
@@ -54,7 +54,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.worldpay.innovation.wpwithin</groupId>
+			<groupId>com.worldpay.innovation.wpw-sdk-java</groupId>
 			<artifactId>sdk</artifactId>
 			<version>0.0.1-alpha</version>
 		</dependency>
