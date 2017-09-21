@@ -124,12 +124,16 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 
 		return client;
 	}
-	
+
 	private void shutdownOnSigterm() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				stopRPCAgent();
+				if (launcher != null) {
+					if (launcher.getProcessHandle().isAlive()) {
+						stopRPCAgent();
+					}
+				}
 			}
 		});
 	}
@@ -318,7 +322,7 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 			throw new WPWithinGeneralException("Failed to end Service Delivery in the wrapper");
 		}
 	}
-	
+
 	@Override
 	public void stopRPCAgent() {
 		try {
