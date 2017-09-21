@@ -1,9 +1,15 @@
 package org.car.example;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import com.worldpay.innovation.wpwithin.PSPConfig;
 import com.worldpay.innovation.wpwithin.WPWithinGeneralException;
@@ -17,7 +23,8 @@ import com.worldpay.innovation.wpwithin.types.WWServiceMessage;
 import com.worldpay.innovation.wpwithin.types.WWTotalPriceResponse;
 
 public class SmartCar {
-	private static WPWithinWrapper wpw;
+
+	private WPWithinWrapper wpw;
 	private int chargeLevel;
 	private Set<WWServiceMessage> devicesSet;
 	private Set<WWServiceDetails> servicesSet;
@@ -29,6 +36,8 @@ public class SmartCar {
 	private WWPaymentResponse paymentResponse;
 	private int unitsToSupply;
 	private static int MAX_CHARGE = 100;
+	private JSONObject jsonObject;
+	private JSONArray jsonArray;
 
 	public SmartCar(WPWithinWrapper wpw) {
 		this.wpw = wpw;
@@ -40,6 +49,8 @@ public class SmartCar {
 	}
 
 	public void setChargeLevel(int chargeLevel) {
+		System.err.println("Battery level set to: " + chargeLevel + "%.");
+		updateFlow("Battery level set to: " + chargeLevel + "%.");
 		this.chargeLevel = chargeLevel;
 	}
 
@@ -48,10 +59,10 @@ public class SmartCar {
 	}
 
 	public void discoverDevices() {
-		Set<WWServiceMessage> devices = wpw.deviceDiscovery(15000);
+		Set<WWServiceMessage> devices = wpw.deviceDiscovery(10000);
 		if (devices.size() > 0) {
 
-			System.out.printf("%d services found:\n", devices.size());
+			System.out.printf("%d device(s) found:\n", devices.size());
 
 			if (devices.iterator().hasNext()) {
 
@@ -111,7 +122,7 @@ public class SmartCar {
 
 		this.servicesSet = wpw.requestServices();
 
-		System.out.printf("%d services found\n", servicesSet.size());
+		System.out.printf("%d service(s) found\n", servicesSet.size());
 
 		if (servicesSet != null && servicesSet.size() > 0) {
 
@@ -162,23 +173,23 @@ public class SmartCar {
 	}
 
 	public void getServicePriceQuote() throws WPWithinGeneralException {
-    	this.unitsToSupply = MAX_CHARGE-chargeLevel;
-        WWTotalPriceResponse tpr = wpw.selectService(serviceID, unitsToSupply, selectedServicePrice.getId());
+		this.unitsToSupply = MAX_CHARGE - chargeLevel;
+		WWTotalPriceResponse tpr = wpw.selectService(serviceID, unitsToSupply, selectedServicePrice.getId());
 
-        if(tpr != null ) {
+		if (tpr != null) {
 
-            System.out.println("Did retrieve price quote:");
-            System.out.printf("Merchant client key: %s\n", tpr.getMerchantClientKey());
-            System.out.printf("Payment reference id: %s\n", tpr.getPaymentReferenceId());
-            System.out.printf("Units to supply: %d\n", tpr.getUnitsToSupply());
-            System.out.printf("Currency code: %s\n", tpr.getCurrencyCode());
-            System.out.printf("Total price: %d\n", tpr.getTotalPrice());
-            this.totalPriceResponse = tpr;
-        } else {
+			System.out.println("Did retrieve price quote:");
+			System.out.printf("Merchant client key: %s\n", tpr.getMerchantClientKey());
+			System.out.printf("Payment reference id: %s\n", tpr.getPaymentReferenceId());
+			System.out.printf("Units to supply: %d\n", tpr.getUnitsToSupply());
+			System.out.printf("Currency code: %s\n", tpr.getCurrencyCode());
+			System.out.printf("Total price: %d\n", tpr.getTotalPrice());
+			this.totalPriceResponse = tpr;
+		} else {
 
-            System.out.println("Result of select service is null..");
-        }
-    }
+			System.out.println("Result of select service is null..");
+		}
+	}
 
 	public void purchaseService() throws WPWithinGeneralException {
 
@@ -191,7 +202,8 @@ public class SmartCar {
 			System.out.printf("ServiceDeliveryToken.issued: %s\n", pResp.getServiceDeliveryToken().getIssued());
 			System.out.printf("ServiceDeliveryToken.expiry: %s\n", pResp.getServiceDeliveryToken().getExpiry());
 			System.out.printf("ServiceDeliveryToken.key: %s\n", pResp.getServiceDeliveryToken().getKey());
-			System.out.printf("ServiceDeliveryToken.signature: %s\n", pResp.getServiceDeliveryToken().getSignature());
+			System.out.printf("ServiceDeliveryToken.signature: %s\n",
+					Base64.getEncoder().encodeToString(pResp.getServiceDeliveryToken().getSignature()));
 			System.out.printf("ServiceDeliveryToken.refundOnExpiry: %b\n",
 					pResp.getServiceDeliveryToken().isRefundOnExpiry());
 			this.paymentResponse = pResp;
@@ -201,14 +213,14 @@ public class SmartCar {
 		}
 	}
 
-	public void startService() throws WPWithinGeneralException {
+	public void startCharging() throws WPWithinGeneralException {
 		System.out.println("Service started - releasing charge.");
 		WWServiceDeliveryToken token = paymentResponse.getServiceDeliveryToken();
 		wpw.beginServiceDelivery(serviceID, token, unitsToSupply);
 		try {
 			System.out.println("Charging the car...");
-			for (int i=0;i<=unitsToSupply;i++) {
-				Thread.sleep(200);
+			for (int i = 0; i <= unitsToSupply; i++) {
+				Thread.sleep(150);
 				System.out.printf("Charging progress: %d/%d\r", i, unitsToSupply);
 			}
 			stopService(token);
@@ -217,15 +229,27 @@ public class SmartCar {
 		}
 	}
 
-	private void stopService(WWServiceDeliveryToken token) throws WPWithinGeneralException {
-		System.out.println("Service stopped - car charged.");
-		wpw.endServiceDelivery(serviceID, token, unitsToSupply);
-	}
-
 	public void selectChargingService() {
 		if (servicesSet != null && servicesSet.iterator().hasNext()) {
 			this.chargingService = servicesSet.iterator().next();
 			this.serviceID = chargingService.getServiceId();
+		}
+	}
+	
+	private void stopService(WWServiceDeliveryToken token) throws WPWithinGeneralException {
+		System.out.printf("Service stopped - car charged.");
+		wpw.endServiceDelivery(serviceID, token, unitsToSupply);
+		wpw.stopRPCAgent();
+	}
+	
+	private void updateFlow(String msg) {
+		JSONObject obj = new JSONObject();
+		obj.put("flow", msg);
+		
+		try (FileWriter file = new FileWriter("flow.json")) {
+			file.write(obj.toJSONString());
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

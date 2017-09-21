@@ -1,6 +1,7 @@
 package org.car.charger;
 
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +17,7 @@ import com.worldpay.innovation.wpwithin.types.WWService;
 import com.worldpay.innovation.wpwithin.types.WWServiceDeliveryToken;
 
 public class Charger {
-
+	private static WPWithinWrapper wpw;
     public static void main(String[] args) {
 
         try {
@@ -26,8 +27,8 @@ public class Charger {
             String[] splitedPkgName = Charger.class.getPackage().getName().split("\\.");
             String rpcLogFile = "rpc-within-" + splitedPkgName[splitedPkgName.length-1] + ".log";
             
-            WPWithinWrapper wpw = new WPWithinWrapperImpl("127.0.0.1", 10000, true, wpWithinEventListener, 10002, rpcAgentListener, rpcLogFile);
-            wpw.setup("Car charger", "Example car charger service.");
+            wpw = new WPWithinWrapperImpl("127.0.0.1", 10000, true, wpWithinEventListener, 10002, rpcAgentListener, rpcLogFile);
+            wpw.setup("Car charger", "Car charger device.");
 
             WWService svc = new WWService();
             svc.setName("Car charger");
@@ -82,13 +83,12 @@ public class Charger {
         public void onBeginServiceDelivery(int serviceID, WWServiceDeliveryToken wwServiceDeliveryToken, int unitsToSupply) throws WPWithinGeneralException {
 				
             try {
-                System.out.println("Starting charging service...");
-				System.out.printf("Service selected: %s\n", chargingServices.getServicesMap().get(serviceID).getDescription());
+				System.out.printf("Starting service: %s\n", wpw.getDevice().getServices().get(serviceID).getName());
                 System.out.printf("UnitsToSupply: %d\n", unitsToSupply);
                 System.out.printf("SDT.Key: %s\n", wwServiceDeliveryToken.getKey());
                 System.out.printf("SDT.Expiry: %s\n", wwServiceDeliveryToken.getExpiry());
                 System.out.printf("SDT.Issued: %s\n", wwServiceDeliveryToken.getIssued());
-                System.out.printf("SDT.Signature: %s\n", wwServiceDeliveryToken.getSignature());
+                System.out.printf("SDT.Signature: %s\n", Base64.getEncoder().encodeToString(wwServiceDeliveryToken.getSignature()));
                 System.out.printf("SDT.RefundOnExpiry: %b\n", wwServiceDeliveryToken.isRefundOnExpiry());
             } catch (Exception e) {
 
@@ -101,13 +101,12 @@ public class Charger {
 
             try {
 
-                System.out.println("Charging completed - stopping service.");
-				System.out.printf("Service selected: %s\n", chargingServices.getServicesMap().get(serviceID).getDescription());
-                System.out.printf("UnitsReceived: %d\n", unitsReceived);
+				System.out.printf("Charging completed - stopping service: %s\n", wpw.getDevice().getServices().get(serviceID).getName());
+                System.out.printf("Units supplied: %d\n", unitsReceived);
                 System.out.printf("SDT.Key: %s\n", wwServiceDeliveryToken.getKey());
                 System.out.printf("SDT.Expiry: %s\n", wwServiceDeliveryToken.getExpiry());
                 System.out.printf("SDT.Issued: %s\n", wwServiceDeliveryToken.getIssued());
-                System.out.printf("SDT.Signature: %s\n", wwServiceDeliveryToken.getSignature());
+                System.out.printf("SDT.Signature: %s\n", Base64.getEncoder().encodeToString(wwServiceDeliveryToken.getSignature()));
                 System.out.printf("SDT.RefundOnExpiry: %b\n", wwServiceDeliveryToken.isRefundOnExpiry());
             } catch (Exception e) {
 
@@ -120,7 +119,7 @@ public class Charger {
         @Override
         public void onApplicationExit(int exitCode, String stdOutput, String errOutput) {
 
-            System.out.printf("RPC Agent process did exit.");
+            System.out.println("RPC Agent process did exit.");
             System.out.printf("ExitCode: %d", exitCode);
             System.out.printf("stdout: \n%s\n", stdOutput);
             System.out.printf("stderr: \n%s\n", errOutput);
