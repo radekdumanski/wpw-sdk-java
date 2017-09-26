@@ -40,8 +40,15 @@ public class SmartCar {
 	private JSONArray jsonArray;
 
 	public SmartCar(WPWithinWrapper wpw) {
+		JSONObject obj = new JSONObject();
+		updateFlow(obj, JsonTags.FLOW, "Starting Smart Car Example Written in Java.");
+		this.jsonObject = obj;
 		this.wpw = wpw;
 		this.chargeLevel = 100;
+	}
+
+	public JSONObject getJsonObject() {
+		return jsonObject;
 	}
 
 	public int getChargeLevel() {
@@ -49,8 +56,10 @@ public class SmartCar {
 	}
 
 	public void setChargeLevel(int chargeLevel) {
-		System.err.println("Battery level set to: " + chargeLevel + "%.");
-		updateFlow("Battery level set to: " + chargeLevel + "%.");
+		JSONObject obj = new JSONObject();
+		updateFlow(obj, JsonTags.FLOW, "Battery level set to: " + chargeLevel + "%.");
+		updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
+		this.jsonObject = obj;
 		this.chargeLevel = chargeLevel;
 	}
 
@@ -59,39 +68,33 @@ public class SmartCar {
 	}
 
 	public void discoverDevices() {
+		JSONObject obj = new JSONObject();
+		updateFlow(obj, JsonTags.FLOW, "Device discovery phase.");
+		updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
 		Set<WWServiceMessage> devices = wpw.deviceDiscovery(10000);
 		if (devices.size() > 0) {
-
-			System.out.printf("%d device(s) found:\n", devices.size());
-
 			if (devices.iterator().hasNext()) {
-
 				WWServiceMessage svcMsg = devices.iterator().next();
-
-				System.out.printf("Device Description: %s\n", svcMsg.getDeviceDescription());
-				System.out.printf("Hostname: %s\n", svcMsg.getHostname());
-				System.out.printf("Port: %d\n", svcMsg.getPortNumber());
-				System.out.printf("URL Prefix: %s\n", svcMsg.getUrlPrefix());
-				System.out.printf("ServerId: %s\n", svcMsg.getServerId());
-				System.out.printf("Scheme: %s\n", svcMsg.getScheme());
-
-				System.out.println("--------");
+				updateFlow(obj, JsonTags.DESCRIPTION, "Found device: " + svcMsg.getDeviceDescription());
+				this.jsonObject = obj;
 			}
 			this.devicesSet = devices;
 		} else {
-
-			System.out.println("No services found..");
+			updateFlow(obj, JsonTags.FLOW, "No services found..");
+			this.jsonObject = obj;
 		}
 
 	}
 
 	public void connectToDevice() throws WPWithinGeneralException {
-
+		JSONObject obj = new JSONObject();
+		updateFlow(obj, JsonTags.FLOW, "Trying to establish connection...");
+		updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
+		this.jsonObject = obj;
 		if (devicesSet != null && devicesSet.iterator().hasNext()) {
 			// Will pick the first device discovered
 			WWServiceMessage svcMsg = devicesSet.iterator().next();
 			WWHCECard card = new WWHCECard();
-
 			card.setFirstName("Bilbo");
 			card.setLastName("Baggins");
 			card.setCardNumber("5555555555554444");
@@ -119,23 +122,16 @@ public class SmartCar {
 	}
 
 	public void getAvailableServices() throws WPWithinGeneralException {
-
+		JSONObject obj = new JSONObject();
+		updateFlow(obj, JsonTags.FLOW, "Service query phase.");
+		updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
 		this.servicesSet = wpw.requestServices();
-
-		System.out.printf("%d service(s) found\n", servicesSet.size());
-
 		if (servicesSet != null && servicesSet.size() > 0) {
-
 			Iterator<WWServiceDetails> svcIterator = servicesSet.iterator();
-
 			while (svcIterator.hasNext()) {
-
 				WWServiceDetails svc = svcIterator.next();
-
-				System.out.println("Service:");
-				System.out.printf("Id: %d\n", svc.getServiceId());
-				System.out.printf("Description: %s\n", svc.getServiceDescription());
-				System.out.println("------");
+				updateFlow(obj, JsonTags.DESCRIPTION, "Found service: "+svc.getServiceDescription());
+				this.jsonObject = obj;
 			}
 		}
 	}
@@ -144,8 +140,15 @@ public class SmartCar {
 		this.servicePrices = wpw.getServicePrices(this.serviceID);
 		WWPrice price;
 		ChargingOptions chargeOption = null;
-		System.out.printf("%d options found for service id %d\n", servicePrices.size(), serviceID);
-
+		JSONObject obj = new JSONObject();
+		updateFlow(obj, JsonTags.FLOW, "Found "+servicePrices.size()+" charging options for selected service");
+		updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
+		this.jsonObject = obj;
+		try {
+			Thread.sleep(7000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		if (servicePrices != null && servicePrices.size() > 0) {
 			Iterator<WWPrice> priceIterator = servicePrices.iterator();
 			if (chargeLevel < 70) {
@@ -158,14 +161,10 @@ public class SmartCar {
 			while (priceIterator.hasNext()) {
 				price = priceIterator.next();
 				if (price.getDescription().equals(chargeOption.name())) {
-					System.out.println("This is the selected charging option:");
-					System.out.printf("Id: %d\n", price.getId());
-					System.out.printf("Description: %s\n", price.getDescription());
-					System.out.printf("UnitId: %d\n", price.getUnitId());
-					System.out.printf("UnitDescription: %s\n", price.getUnitDescription());
-					System.out.printf("Unit Price Amount: %d\n", price.getPricePerUnit().getAmount());
-					System.out.printf("Unit Price CurrencyCode: %s\n", price.getPricePerUnit().getCurrencyCode());
-					System.out.println("------");
+					updateFlow(obj, JsonTags.FLOW, "Selected option: "+price.getDescription());
+					updateFlow(obj, JsonTags.DESCRIPTION, price.getUnitDescription());
+					updateFlow(obj, JsonTags.PRICE, "Price per kW: "+(float)(price.getPricePerUnit().getAmount()/100)+price.getPricePerUnit().getCurrencyCode());
+					this.jsonObject = obj;
 					this.selectedServicePrice = price;
 				}
 			}
@@ -175,53 +174,46 @@ public class SmartCar {
 	public void getServicePriceQuote() throws WPWithinGeneralException {
 		this.unitsToSupply = MAX_CHARGE - chargeLevel;
 		WWTotalPriceResponse tpr = wpw.selectService(serviceID, unitsToSupply, selectedServicePrice.getId());
-
+		JSONObject obj = new JSONObject();
 		if (tpr != null) {
-
-			System.out.println("Did retrieve price quote:");
-			System.out.printf("Merchant client key: %s\n", tpr.getMerchantClientKey());
-			System.out.printf("Payment reference id: %s\n", tpr.getPaymentReferenceId());
-			System.out.printf("Units to supply: %d\n", tpr.getUnitsToSupply());
-			System.out.printf("Currency code: %s\n", tpr.getCurrencyCode());
-			System.out.printf("Total price: %d\n", tpr.getTotalPrice());
+			updateFlow(obj, JsonTags.FLOW, "Price calculation phase.");
+			updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
+			updateFlow(obj, JsonTags.UNITS, "Units to supply: "+tpr.getUnitsToSupply());
+			updateFlow(obj, JsonTags.PRICE, "Total price: "+(float)(tpr.getTotalPrice()/100)+tpr.getCurrencyCode());
+			this.jsonObject = obj;
 			this.totalPriceResponse = tpr;
 		} else {
-
-			System.out.println("Result of select service is null..");
+			updateFlow(obj, JsonTags.FLOW, "Result of select service is null..");
+			this.jsonObject = obj;
 		}
 	}
 
 	public void purchaseService() throws WPWithinGeneralException {
 
 		WWPaymentResponse pResp = wpw.makePayment(this.totalPriceResponse);
-
+		JSONObject obj = new JSONObject();
 		if (pResp != null) {
-
-			System.out.printf("Payment response: ");
-			System.out.printf("Total paid: %d\n", pResp.getTotalPaid());
-			System.out.printf("ServiceDeliveryToken.issued: %s\n", pResp.getServiceDeliveryToken().getIssued());
-			System.out.printf("ServiceDeliveryToken.expiry: %s\n", pResp.getServiceDeliveryToken().getExpiry());
-			System.out.printf("ServiceDeliveryToken.key: %s\n", pResp.getServiceDeliveryToken().getKey());
-			System.out.printf("ServiceDeliveryToken.signature: %s\n",
-					Base64.getEncoder().encodeToString(pResp.getServiceDeliveryToken().getSignature()));
-			System.out.printf("ServiceDeliveryToken.refundOnExpiry: %b\n",
-					pResp.getServiceDeliveryToken().isRefundOnExpiry());
+			updateFlow(obj, JsonTags.FLOW, "Payment phase.");
+			updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
+			updateFlow(obj, JsonTags.PRICE, "Total paid: "+(float)(pResp.getTotalPaid()/100));
+			this.jsonObject = obj;
 			this.paymentResponse = pResp;
 		} else {
-
-			System.out.println("Result of make payment is null..");
+			updateFlow(obj, JsonTags.FLOW, "Result of make payment is null..");
+			this.jsonObject = obj;
 		}
 	}
 
 	public void startCharging() throws WPWithinGeneralException {
-		System.out.println("Service started - releasing charge.");
 		WWServiceDeliveryToken token = paymentResponse.getServiceDeliveryToken();
 		wpw.beginServiceDelivery(serviceID, token, unitsToSupply);
 		try {
-			System.out.println("Charging the car...");
-			for (int i = 0; i <= unitsToSupply; i++) {
-				Thread.sleep(150);
-				System.out.printf("Charging progress: %d/%d\r", i, unitsToSupply);
+			JSONObject obj = new JSONObject();
+			updateFlow(obj, JsonTags.FLOW, "Charging the car...");
+			for (int i = 0; i <= unitsToSupply; i=i+2) {
+				updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel+i));
+				this.jsonObject = obj;
+				Thread.sleep(1500);
 			}
 			stopService(token);
 		} catch (InterruptedException e) {
@@ -235,17 +227,21 @@ public class SmartCar {
 			this.serviceID = chargingService.getServiceId();
 		}
 	}
-	
+
 	private void stopService(WWServiceDeliveryToken token) throws WPWithinGeneralException {
-		System.out.printf("Service stopped - car charged.");
+		JSONObject obj = new JSONObject();
+		updateFlow(obj, JsonTags.FLOW, "Car charged, stopping service");
+		updateFlow(obj, JsonTags.BATTERY, "100");
+		this.jsonObject = obj;
 		wpw.endServiceDelivery(serviceID, token, unitsToSupply);
 		wpw.stopRPCAgent();
 	}
+
+	private void updateFlow(JSONObject obj, JsonTags tag, String msg) {
+		obj.put(tag.getTag(), msg);
+	}
 	
-	private void updateFlow(String msg) {
-		JSONObject obj = new JSONObject();
-		obj.put("flow", msg);
-		
+	private void writeToJsonFile(JSONObject obj) {
 		try (FileWriter file = new FileWriter("flow.json")) {
 			file.write(obj.toJSONString());
 		} catch (IOException e) {

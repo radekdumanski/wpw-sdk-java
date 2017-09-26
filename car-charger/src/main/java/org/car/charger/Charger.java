@@ -32,7 +32,7 @@ public class Charger {
 
             WWService svc = new WWService();
             svc.setName("Car charger");
-            svc.setDescription("Can charge your hybrid / electric car");
+            svc.setDescription("Hybrid / electric car charger.");
             svc.setId(1);
             ChargingServices chargingServices = new ChargingServices();
             svc.setPrices(chargingServices.getServicesMap());

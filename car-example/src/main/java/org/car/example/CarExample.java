@@ -14,43 +14,36 @@ public class CarExample {
 		} else if (args.length == 1) {
 			try {
 				batteryLevel = Integer.parseInt(args[0]);
-				System.out.println("Starting Smart Car Example Written in Java.");
 				// define log file name for the rpc agent (based on the package name),
 				// e.g. "rpc-within-consumerex.log";
 				String[] splitedPkgName = CarExample.class.getPackage().getName().split("\\.");
 				String rpcLogFile = "rpc-within-" + splitedPkgName[splitedPkgName.length - 1] + ".log";
-
 				wpw = new WPWithinWrapperImpl("127.0.0.1", 10005, true, rpcAgentListener, rpcLogFile);
 				SmartCar smartCar = new SmartCar(wpw);
 				smartCar.setup("smart-car", "Smart car example.");
 				// setchargeXXX
-				Thread.sleep(10000);
+				Thread.sleep(8000);
 				smartCar.setChargeLevel(batteryLevel);
 				// flow ~plugin
-				System.out.println("Looking for available devices...");
+				Thread.sleep(8000);
 				smartCar.discoverDevices();
 				
-				System.out.println("Trying to establish connection...");
 				Thread.sleep(5000);
 				smartCar.connectToDevice();
 				
-				System.out.println("Getting available services...");
 				Thread.sleep(7000);
 				smartCar.getAvailableServices();
 				
-				System.out.println("Selecting charging service...");
 				Thread.sleep(3000);
 				smartCar.selectChargingService();
 				
-				System.out.println("Selecting charge option based on battery level...");
 				Thread.sleep(10000);
 				smartCar.selectChargingOption();
 				
-				System.out.println("Getting price quote...");
+
 				Thread.sleep(3000);
 				smartCar.getServicePriceQuote();
 				Thread.sleep(7000);
-				System.out.println("Making payment...");
 				smartCar.purchaseService();
 				
 				// start_service

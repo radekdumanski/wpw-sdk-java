@@ -1,0 +1,51 @@
+div.carsMatrix {
+	height: 30vh;
+	overflow-y: scroll;
+	margin-bottom: 1em;
+	border: 1px inset gray;
+	padding: 4px;
+	box-shadow: inset 2px 2px 4px black;
+}
+table>tbody>tr>td {
+	padding: 1px 1px 1px 1px;
+	font-size: 60%;
+}
+table>thead>tr>th {
+	padding: 1px 1px 1px 1px;
+	font-size: 60%;
+	font-weight: 800;
+	background-color: silver;
+}
+#hardJSON {
+	margin:1em;
+	margin-bottom:-30px;
+	font-size:18px;
+	width:400px;
+	border-radius:0.5em;
+	box-shadow:inset 2px 2px 4px black;
+	padding:0.5em;
+	background-color:rgba(255,255,255,0.25);
+}
+#hardJSON > div {
+	line-height:25px;
+}
+#hardJSON > div.line1 {
+	border-top:1px solid black;
+	border-top-left-radius:0.5em;
+	border-top-right-radius:0.5em;
+	border-bottom:1px solid black;
+	border-bottom-left-radius:0.5em;
+	border-bottom-right-radius:0.5em;
+	-webkit-transition : border 500ms ease-out;
+	-moz-transition : border 500ms ease-out;
+	-o-transition : border 500ms ease-out;
+	transition : border 500ms ease-out;
+}
+}
+#hardJSON > div.line2 {
+}
+#hardJSON > div > span {
+	display:inline-block;
+	border:none;
+	margin:0px;
+}
