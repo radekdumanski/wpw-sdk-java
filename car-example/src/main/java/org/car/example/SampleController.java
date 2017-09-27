@@ -1,8 +1,5 @@
 package org.car.example;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,48 +12,18 @@ import com.worldpay.innovation.wpwithin.rpc.launcher.Listener;
 
 @Controller
 public class SampleController {
-	private WPWithinWrapper wpw;
-	private int batteryLevel;
 	private static SmartCar smartCar;
-	private Thread plugin;
+	private WPWithinWrapper wpw;
 
 	public SampleController() {
-		this.plugin = new Thread() {
-			public void run() {
-				try {
-					wpw = new WPWithinWrapperImpl("127.0.0.1", 10005, true, rpcAgentListener, "car-example.log");
-					smartCar = new SmartCar(wpw);
-					smartCar.setup("smart-car", "Smart car example.");
-					// setchargeXXX
-					Thread.sleep(8000);
-					smartCar.setChargeLevel(batteryLevel);
-					// flow ~plugin
-					Thread.sleep(8000);
-					smartCar.discoverDevices();
-					Thread.sleep(5000);
-					smartCar.connectToDevice();
-					Thread.sleep(7000);
-					smartCar.getAvailableServices();
-					Thread.sleep(3000);
-					smartCar.selectChargingService();
-					Thread.sleep(10000);
-					smartCar.selectChargingOption();
-					Thread.sleep(3000);
-					smartCar.getServicePriceQuote();
-					Thread.sleep(7000);
-					smartCar.purchaseService();
-					// start_service
-					Thread.sleep(9000);
-					smartCar.startCharging();
-				} catch (InterruptedException v) {
-					System.out.println(v);
-				}
-			}
-		};
+		this.wpw = new WPWithinWrapperImpl("127.0.0.1", 10005, true, rpcAgentListener, "car-example.log");
+		smartCar = new SmartCar(wpw);
 	}
+
 	@RequestMapping("/setCharge")
-	public @ResponseBody String setCharge(@RequestParam("data") int batteryLevel) {
-		this.batteryLevel = batteryLevel;
+	public String setCharge(@RequestParam("data") int batteryLevel) throws InterruptedException {
+		// setchargeXXX
+		smartCar.setChargeLevel(batteryLevel);
 		return "html/index";
 	}
 
@@ -66,10 +33,8 @@ public class SampleController {
 	}
 
 	@RequestMapping("/plugin")
-	synchronized String plugin() throws InterruptedException {
-		if(!plugin.isAlive()) {
-			plugin.start();
-		}
+	synchronized String plugin() throws ConflictException {
+		new CarController(smartCar);
 		return "html/index";
 	}
 
@@ -87,4 +52,5 @@ public class SampleController {
 			System.out.printf("ExitCode: %d\n\r", exitCode);
 		}
 	};
+
 }
