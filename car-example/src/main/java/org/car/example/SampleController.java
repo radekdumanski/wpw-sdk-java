@@ -2,6 +2,7 @@ package org.car.example;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,6 +21,7 @@ public class SampleController {
 		smartCar = new SmartCar(wpw);
 	}
 
+	@CrossOrigin
 	@RequestMapping("/setCharge")
 	public String setCharge(@RequestParam("data") int batteryLevel) throws InterruptedException {
 		// setchargeXXX
@@ -32,12 +34,14 @@ public class SampleController {
 		return "html/index";
 	}
 
+	@CrossOrigin
 	@RequestMapping("/plugin")
 	synchronized String plugin() throws ConflictException {
 		new CarController(smartCar);
 		return "html/index";
 	}
 
+	@CrossOrigin
 	@RequestMapping(value = "/getStatus", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public String getStatus() {
