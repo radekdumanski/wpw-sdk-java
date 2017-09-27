@@ -14,6 +14,8 @@ import org.json.simple.JSONObject;
 import com.worldpay.innovation.wpwithin.PSPConfig;
 import com.worldpay.innovation.wpwithin.WPWithinGeneralException;
 import com.worldpay.innovation.wpwithin.WPWithinWrapper;
+import com.worldpay.innovation.wpwithin.WPWithinWrapperImpl;
+import com.worldpay.innovation.wpwithin.rpc.launcher.Listener;
 import com.worldpay.innovation.wpwithin.types.WWHCECard;
 import com.worldpay.innovation.wpwithin.types.WWPaymentResponse;
 import com.worldpay.innovation.wpwithin.types.WWPrice;
@@ -38,13 +40,23 @@ public class SmartCar {
 	private static int MAX_CHARGE = 100;
 	private JSONObject jsonObject;
 	private JSONArray jsonArray;
+	private CarController carController = null;
 
-	public SmartCar(WPWithinWrapper wpw) {
+	public CarController getCarController() {
+		return carController;
+	}
+
+	public void setCarController(CarController carController) {
+		this.carController = carController;
+	}
+
+	SmartCar(WPWithinWrapper wpw) {
 		JSONObject obj = new JSONObject();
-		updateFlow(obj, JsonTags.FLOW, "Starting Smart Car Example Written in Java.");
-		this.jsonObject = obj;
 		this.wpw = wpw;
-		this.chargeLevel = 100;
+		this.chargeLevel = 99;
+		updateFlow(obj, JsonTags.FLOW, "Smart Car Web service.");
+		updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
+		this.jsonObject = obj;
 	}
 
 	public JSONObject getJsonObject() {
@@ -230,11 +242,10 @@ public class SmartCar {
 
 	private void stopService(WWServiceDeliveryToken token) throws WPWithinGeneralException {
 		JSONObject obj = new JSONObject();
-		updateFlow(obj, JsonTags.FLOW, "Car charged, stopping service");
+		updateFlow(obj, JsonTags.FLOW, "Car charged, waiting for input...");
 		updateFlow(obj, JsonTags.BATTERY, "100");
 		this.jsonObject = obj;
 		wpw.endServiceDelivery(serviceID, token, unitsToSupply);
-		wpw.stopRPCAgent();
 	}
 
 	private void updateFlow(JSONObject obj, JsonTags tag, String msg) {
@@ -246,6 +257,14 @@ public class SmartCar {
 			file.write(obj.toJSONString());
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	public synchronized boolean attachController(CarController carController) {
+		if(this.carController==null) {
+			this.carController = carController;
+			return true;
+		} else {
+			return false;
 		}
 	}
 }
