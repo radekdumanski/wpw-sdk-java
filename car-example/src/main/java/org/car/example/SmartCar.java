@@ -47,10 +47,14 @@ public class SmartCar {
 
 	SmartCar(WPWithinWrapper wpw) {
 		JSONObject obj = new JSONObject();
+		JSONObject chargerObj = new JSONObject();
 		this.wpw = wpw;
 		this.chargeLevel = 99;
 		updateFlow(obj, JsonTags.FLOW, "Smart Car Web service.");
 		updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
+		
+		updateFlow(chargerObj, JsonTags.FLOW, "Broadcasting...");
+		this.chargerJsonObject = chargerObj;
 		this.jsonObject = obj;
 	}
 
@@ -281,13 +285,15 @@ public class SmartCar {
 		}
 	}
 
-	private void stopService(WWServiceDeliveryToken token) throws WPWithinGeneralException {
+	private void stopService(WWServiceDeliveryToken token) throws WPWithinGeneralException, InterruptedException {
 		JSONObject obj = new JSONObject();
 		JSONObject chargerObj = new JSONObject();
 		updateFlow(obj, JsonTags.FLOW, "Car charged, waiting for input...");
 		updateFlow(obj, JsonTags.BATTERY, "100");
 		
 		updateFlow(chargerObj, JsonTags.FLOW, "Service delivery completed.");
+		Thread.sleep(2000);
+		updateFlow(chargerObj, JsonTags.FLOW, "Broadcasting...");
 		this.jsonObject = obj;
 		this.chargerJsonObject = chargerObj;
 		wpw.endServiceDelivery(serviceID, token, unitsToSupply);
