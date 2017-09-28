@@ -1,5 +1,5 @@
 {
     language: java,
     os: linux,
-    script: mvn clean verify
+    script: mvn --quiet clean verify
 }
