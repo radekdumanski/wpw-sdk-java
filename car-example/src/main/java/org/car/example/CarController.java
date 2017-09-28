@@ -18,7 +18,7 @@ public class CarController extends Thread {
 			
 			smartCar.setup("smart-car", "Smart car example.");
 			// flow ~plugin
-			Thread.sleep(8000);
+			Thread.sleep(1000);
 			smartCar.discoverDevices();
 			Thread.sleep(5000);
 			smartCar.connectToDevice();

@@ -13,7 +13,7 @@ import com.worldpay.innovation.wpwithin.rpc.launcher.Listener;
 
 @Controller
 public class SampleController {
-	private static SmartCar smartCar;
+	private SmartCar smartCar;
 	private WPWithinWrapper wpw;
 
 	public SampleController() {
