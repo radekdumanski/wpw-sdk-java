@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.worldpay.innovation</groupId>
-		<artifactId>wpwithin</artifactId>
+		<artifactId>wpw-sdk-java</artifactId>
 		<version>0.0.1-alpha</version>
 	</parent>
 	<artifactId>sample-consumer</artifactId>
@@ -28,7 +28,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.worldpay.innovation.wpwithin.consumerex.Main</mainClass>
+							<mainClass>com.worldpay.innovation.wpw-sdk-java.consumerex.Main</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
@@ -52,9 +52,10 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.worldpay.innovation.wpwithin</groupId>
+			<groupId>com.worldpay.innovation.wpw-sdk-java</groupId>
 			<artifactId>sdk</artifactId>
 			<version>0.0.1-alpha</version>
 		</dependency>
 	</dependencies>
+	<groupId>com.worldpay.innovation.wpw-sdk-java</groupId>
 </project>

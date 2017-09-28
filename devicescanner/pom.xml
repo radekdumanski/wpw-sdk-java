@@ -1,8 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>com.worldpay.innovation.wpwithin</groupId>
+	<parent>
+		<groupId>com.worldpay.innovation</groupId>
+		<artifactId>wpw-sdk-java</artifactId>
+		<version>0.0.1-alpha</version>
+	</parent>
+	<groupId>com.worldpay.innovation.wpw-sdk-java</groupId>
 	<artifactId>devicescanner</artifactId>
 	<version>0.0.1-alpha</version>
 	<packaging>jar</packaging>
@@ -26,7 +30,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.worldpay.innovation.wpwithin.devicescanner.Main</mainClass>
+							<mainClass>com.worldpay.innovation.wpw-sdk-java.devicescanner.Main</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
@@ -51,7 +55,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.worldpay.innovation.wpwithin</groupId>
+			<groupId>com.worldpay.innovation.wpw-sdk-java</groupId>
 			<artifactId>sdk</artifactId>
 			<version>0.0.1-alpha</version>
 		</dependency>
