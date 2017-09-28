@@ -35,6 +35,7 @@ public class SmartCar {
 	private JSONObject jsonObject;
 	private CarController carController = null;
 	private String priceCurrency;
+	private JSONObject chargerJsonObject;
 
 	public CarController getCarController() {
 		return carController;
@@ -79,19 +80,26 @@ public class SmartCar {
 
 	public void discoverDevices() {
 		JSONObject obj = new JSONObject();
+		JSONObject chargerObj = new JSONObject();
+
 		updateFlow(obj, JsonTags.FLOW, "Device discovery phase.");
 		updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
+
 		Set<WWServiceMessage> devices = wpw.deviceDiscovery(10000);
 		if (devices.size() > 0) {
 			if (devices.iterator().hasNext()) {
 				WWServiceMessage svcMsg = devices.iterator().next();
+				updateFlow(chargerObj, JsonTags.FLOW, "Consumer device found.");
 				updateFlow(obj, JsonTags.DESCRIPTION, "Found device: " + svcMsg.getDeviceDescription());
 				this.jsonObject = obj;
+				this.chargerJsonObject = chargerObj;
 			}
 			this.devicesSet = devices;
 		} else {
-			updateFlow(obj, JsonTags.FLOW, "No services found..");
+			updateFlow(obj, JsonTags.FLOW, "No services found...");
+			updateFlow(chargerObj, JsonTags.FLOW, "No services found...");
 			this.jsonObject = obj;
+			this.chargerJsonObject = chargerObj;
 		}
 
 	}
@@ -140,7 +148,7 @@ public class SmartCar {
 			Iterator<WWServiceDetails> svcIterator = servicesSet.iterator();
 			while (svcIterator.hasNext()) {
 				WWServiceDetails svc = svcIterator.next();
-				updateFlow(obj, JsonTags.DESCRIPTION, "Found service: "+svc.getServiceDescription());
+				updateFlow(obj, JsonTags.DESCRIPTION, "Found service: " + svc.getServiceDescription());
 				this.jsonObject = obj;
 			}
 		}
@@ -149,9 +157,10 @@ public class SmartCar {
 	public void selectChargingOption() {
 		this.servicePrices = wpw.getServicePrices(this.serviceID);
 		WWPrice price;
-		ChargingOptions chargeOption = null;
 		JSONObject obj = new JSONObject();
-		updateFlow(obj, JsonTags.FLOW, "Found "+servicePrices.size()+" charging options for selected service");
+		JSONObject chargerObj = new JSONObject();
+		ChargingOptions chargeOption = null;
+		updateFlow(obj, JsonTags.FLOW, "Found " + servicePrices.size() + " charging options for selected service");
 		updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
 		this.jsonObject = obj;
 		try {
@@ -171,10 +180,17 @@ public class SmartCar {
 			while (priceIterator.hasNext()) {
 				price = priceIterator.next();
 				if (price.getDescription().equals(chargeOption.name())) {
-					updateFlow(obj, JsonTags.FLOW, "Selected option: "+price.getDescription());
+					updateFlow(obj, JsonTags.FLOW, "Selected option: " + price.getDescription());
 					updateFlow(obj, JsonTags.DESCRIPTION, price.getUnitDescription());
-					updateFlow(obj, JsonTags.PRICE, "Price per kW: "+(float)(price.getPricePerUnit().getAmount()/100)+price.getPricePerUnit().getCurrencyCode());
+					updateFlow(obj, JsonTags.PRICE,
+							"Price per kW: " + (float) (price.getPricePerUnit().getAmount() / 100)
+									+ price.getPricePerUnit().getCurrencyCode());
+
+					updateFlow(chargerObj, JsonTags.FLOW, "Option to provide: " + price.getDescription());
+					updateFlow(chargerObj, JsonTags.DESCRIPTION, price.getUnitDescription());
+
 					this.jsonObject = obj;
+					this.chargerJsonObject = chargerObj;
 					this.selectedServicePrice = price;
 				}
 			}
@@ -185,17 +201,26 @@ public class SmartCar {
 		this.unitsToSupply = MAX_CHARGE - chargeLevel;
 		WWTotalPriceResponse tpr = wpw.selectService(serviceID, unitsToSupply, selectedServicePrice.getId());
 		JSONObject obj = new JSONObject();
+		JSONObject chargerObj = new JSONObject();
 		if (tpr != null) {
 			updateFlow(obj, JsonTags.FLOW, "Price calculation phase.");
 			updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
-			updateFlow(obj, JsonTags.UNITS, "Units to supply: "+tpr.getUnitsToSupply());
-			updateFlow(obj, JsonTags.PRICE, "Total price: "+(float)(tpr.getTotalPrice()/100)+tpr.getCurrencyCode());
+			updateFlow(obj, JsonTags.UNITS, "Units to supply: " + tpr.getUnitsToSupply());
+			updateFlow(obj, JsonTags.PRICE,
+					"Total price: " + (float) (tpr.getTotalPrice() / 100) + tpr.getCurrencyCode());
+			
+			updateFlow(chargerObj, JsonTags.FLOW, "Calculation ...");
+			updateFlow(chargerObj, JsonTags.UNITS, "Units: "+ tpr.getUnitsToSupply());
+			updateFlow(chargerObj, JsonTags.PRICE, "Price in total: " + (float) (tpr.getTotalPrice() / 100) + tpr.getCurrencyCode());
 			this.jsonObject = obj;
+			this.chargerJsonObject = chargerObj;
 			this.totalPriceResponse = tpr;
 			this.priceCurrency = tpr.getCurrencyCode();
 		} else {
-			updateFlow(obj, JsonTags.FLOW, "Result of select service is null..");
+			updateFlow(obj, JsonTags.FLOW, "Result of select service is null...");
+			updateFlow(chargerObj, JsonTags.FLOW, "Result of select service is null...");
 			this.jsonObject = obj;
+			this.chargerJsonObject = chargerObj;
 		}
 	}
 
@@ -203,15 +228,22 @@ public class SmartCar {
 
 		WWPaymentResponse pResp = wpw.makePayment(this.totalPriceResponse);
 		JSONObject obj = new JSONObject();
+		JSONObject chargerObj = new JSONObject();
 		if (pResp != null) {
 			updateFlow(obj, JsonTags.FLOW, "Payment phase.");
 			updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
-			updateFlow(obj, JsonTags.PRICE, "Total paid: "+(float)(pResp.getTotalPaid()/100)+priceCurrency);
+			updateFlow(obj, JsonTags.PRICE, "Total paid: " + (float) (pResp.getTotalPaid() / 100) + priceCurrency);
+			
+			updateFlow(chargerObj, JsonTags.FLOW, "Payment...");
+			updateFlow(chargerObj, JsonTags.PRICE, "Total paid: "+ (float) (pResp.getTotalPaid() / 100) + priceCurrency);
 			this.jsonObject = obj;
+			this.chargerJsonObject = chargerObj;
 			this.paymentResponse = pResp;
 		} else {
-			updateFlow(obj, JsonTags.FLOW, "Result of make payment is null..");
+			updateFlow(obj, JsonTags.FLOW, "Result of make payment is null...");
+			updateFlow(chargerObj, JsonTags.FLOW, "Result of make payment is null...");
 			this.jsonObject = obj;
+			this.chargerJsonObject = chargerObj;
 		}
 	}
 
@@ -221,10 +253,15 @@ public class SmartCar {
 		wpw.beginServiceDelivery(serviceID, token, unitsToSupply);
 		try {
 			JSONObject obj = new JSONObject();
+			JSONObject chargerObj = new JSONObject();
+			updateFlow(chargerObj, JsonTags.FLOW, "Charging the battery...");
 			updateFlow(obj, JsonTags.FLOW, "Charging the car...");
-			for (int i = 0; i <= unitsToSupply; i=i+1) {
-				updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel+i));
+			
+			for (int i = 0; i <= unitsToSupply; i = i + 1) {
+				updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel + i));
+				updateFlow(chargerObj, JsonTags.BATTERY, String.valueOf(chargeLevel + i));
 				this.jsonObject = obj;
+				this.chargerJsonObject = chargerObj;
 				Thread.sleep(1000);
 			}
 			stopService(token);
@@ -242,18 +279,22 @@ public class SmartCar {
 
 	private void stopService(WWServiceDeliveryToken token) throws WPWithinGeneralException {
 		JSONObject obj = new JSONObject();
+		JSONObject chargerObj = new JSONObject();
 		updateFlow(obj, JsonTags.FLOW, "Car charged, waiting for input...");
 		updateFlow(obj, JsonTags.BATTERY, "100");
+		
+		updateFlow(chargerObj, JsonTags.FLOW, "Service delivery completed.");
 		this.jsonObject = obj;
+		this.chargerJsonObject = chargerObj;
 		wpw.endServiceDelivery(serviceID, token, unitsToSupply);
 	}
 
 	private void updateFlow(JSONObject obj, JsonTags tag, String msg) {
 		obj.put(tag.getTag(), msg);
 	}
-	
+
 	public synchronized boolean attachController(CarController carController) {
-		if(this.carController==null) {
+		if (this.carController == null) {
 			this.carController = carController;
 			return true;
 		} else {

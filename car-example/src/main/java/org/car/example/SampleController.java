@@ -47,6 +47,13 @@ public class SampleController {
 	public String getStatus() {
 		return smartCar.getJsonObject().toJSONString();
 	}
+	
+	@CrossOrigin
+	@RequestMapping(value = "/getChargerStatus", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public String getChargerStatus() {
+		return smartCar.getChargerJsonObject().toJSONString();
+	}
 
 	private static final Listener rpcAgentListener = new Listener() {
 		@Override
