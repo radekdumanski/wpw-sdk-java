@@ -26,14 +26,14 @@ public class CarController extends Thread {
 			smartCar.getAvailableServices();
 			Thread.sleep(3000);
 			smartCar.selectChargingService();
-			Thread.sleep(10000);
+			Thread.sleep(8000);
 			smartCar.selectChargingOption();
-			Thread.sleep(3000);
+			Thread.sleep(7000);
 			smartCar.getServicePriceQuote();
 			Thread.sleep(7000);
 			smartCar.purchaseService();
 			// start_service
-			Thread.sleep(9000);
+			Thread.sleep(8000);
 			smartCar.startCharging();
 			smartCar.setCarController(null);
 		} catch (InterruptedException v) {
