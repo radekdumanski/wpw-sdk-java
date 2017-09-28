@@ -1,5 +1,5 @@
 {
     language: java,
     os: linux,
-    script: mvn --quiet clean verify
+    script: mvn --quiet clean verify -Dorg.slf4j.simpleLogger.defaultLogLevel=WARN
 }
