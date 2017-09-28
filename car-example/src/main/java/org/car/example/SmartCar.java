@@ -54,6 +54,10 @@ public class SmartCar {
 		this.jsonObject = obj;
 	}
 
+	public JSONObject getChargerJsonObject() {
+		return chargerJsonObject;
+	}
+
 	public JSONObject getJsonObject() {
 		return jsonObject;
 	}
