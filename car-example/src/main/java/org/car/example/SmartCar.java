@@ -222,10 +222,10 @@ public class SmartCar {
 		try {
 			JSONObject obj = new JSONObject();
 			updateFlow(obj, JsonTags.FLOW, "Charging the car...");
-			for (int i = 0; i <= unitsToSupply; i=i+2) {
+			for (int i = 0; i <= unitsToSupply; i=i+1) {
 				updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel+i));
 				this.jsonObject = obj;
-				Thread.sleep(1500);
+				Thread.sleep(1000);
 			}
 			stopService(token);
 		} catch (InterruptedException e) {
