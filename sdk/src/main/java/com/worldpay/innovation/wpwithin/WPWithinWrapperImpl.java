@@ -347,7 +347,7 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 
 		String flagLogLevels = "debug,error,info,warn,fatal,panic";
 		String flagCallbackPort = callbackPort > 0 ? "-callbackport=" + callbackPort : "";
-		String binBase = System.getenv("WPW_HOME") == null ? "./rpc-agent-bin"
+		String binBase = System.getenv("WPW_HOME") == null ? "../iot-core-component/bin"
 				: String.format("%s/bin", System.getenv("WPW_HOME"));
 
 		launcher = new Launcher();
