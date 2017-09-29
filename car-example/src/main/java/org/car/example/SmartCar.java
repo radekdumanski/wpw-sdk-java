@@ -191,7 +191,7 @@ public class SmartCar {
 					updateFlow(obj, JsonTags.FLOW, "Selected option: " + price.getDescription());
 					updateFlow(obj, JsonTags.DESCRIPTION, price.getUnitDescription());
 					updateFlow(obj, JsonTags.PRICE,
-							"Price per kW: " + (float) (price.getPricePerUnit().getAmount() / 100)
+							"Price per kW: " +  ((float)price.getPricePerUnit().getAmount() / 100.0)
 									+ price.getPricePerUnit().getCurrencyCode());
 
 					updateFlow(chargerObj, JsonTags.FLOW, "Option to provide: " + price.getDescription());
@@ -268,7 +268,7 @@ public class SmartCar {
 			
 			for (int i = 0; i <= unitsToSupply; i = i + 1) {
 				updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel + i));
-				updateFlow(chargerObj, JsonTags.BATTERY, String.valueOf(chargeLevel + i));
+				updateFlow(chargerObj, JsonTags.BATTERY, String.valueOf(i));
 				this.jsonObject = obj;
 				this.chargerJsonObject = chargerObj;
 				Thread.sleep(1000);
