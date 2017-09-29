@@ -42,7 +42,6 @@ table>thead>tr>th {
 	-o-transition : border 500ms ease-out;
 	transition : border 500ms ease-out;
 	height:2.5em;
-	//display:flex;
 	align-items:center;
 }
 #JSON-on-LCD > div.line1 > jsonBoxFlow {
@@ -67,11 +66,25 @@ table>thead>tr>th {
 	width: 20%;
 	height:1.5em;
 }
-#JSON-on-LCD > div > span#jsonBoxBatt > span {
+#JSON-on-LCD > div > span#jsonBoxBatt > span#jsonBoxBattVal {
+	position:absolute;
+	width:100%;
+	height:100%;
+	text-align:center;
+	color:white;
+	text-shadow: 1px 1px 2px black;
+	padding-top:3px;
+}
+#JSON-on-LCD > div > span#jsonBoxBatt > span#jsonBoxBattGreen {
 	box-shadow: inset 2px 2px 3px black;
 }
-#JSON-on-LCD > div > span#jsonBoxBatt:hover:before {
+#JSON-on-LCD > div > span#jsonBoxBatt > span#jsonBoxBattGray {
+	box-shadow: inset 4px 4px 5px black;
+}
+#JSON-on-LCD > div > span#jsonBoxBatt.adminMode:hover:before {
 	content:"setCharge";
+	background-color: rgba(0,0,0,0.5);
+	height:100%;
 }
 #JSON-on-LCD > div > span#jsonBoxBatt:before {
 	width:100%;
@@ -103,6 +116,43 @@ span#rechargeButton{
 	box-shadow:5px 5px 3px black, inset 2px 2px 4px white;
 	padding:5px 15px 5px 15px;;
 	margin:0px 0px 5px 0px;
-	//background-color:red;
 	border:1px solid white;
+}
+.chkBtn{
+	/*display:none;*/
+	display:inline-block;
+	border-radius:0.4em;
+	padding: 0em 0.5em 0em 0.5em;
+	margin:0.5em;
+	box-shadow: 2px 2px 3px black, inset 1px 1px 2px white;
+}
+.chkBtn>input{
+	margin:1px;
+}
+#ctrl-box-src{
+	display:inline-block;
+	margin:0.5em
+}
+#ctrl-box-src.hidden{
+	display:none;
+}
+#flow-json-link{
+	display:inline-block;
+	/*display:none;*/
+	background-color:white;
+	border-radius:0.5em;
+	padding-left:0.5em;
+	padding-right:0.5em;
+	box-shadow:inset 2px 2px 3px black;
+	background-color:white;
+	margin:0.5em;
+	opacity:0.5;
+}
+#jsonTimestamp.hidden {
+	visibility: collapse;
+}
+#jsonTimestamp {
+	visibility: visible;
+	font-size:0.5em;
+	color: black;
 }

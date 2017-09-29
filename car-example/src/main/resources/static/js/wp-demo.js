@@ -70,14 +70,17 @@ function processJSON(jsonPath){
 			if(m !== null && m.length>0 && m[1]>=0 && m[1]<=100){
 				// TODO: parseInt()
 				//document.getElementById('jsonBoxBatt').innerHTML = "charge parse error";
+				document.getElementById('jsonBoxBattVal').innerText = m[1]+'%';
 				document.getElementById('jsonBoxBattGreen').style.width = m[1]+'%';
 				document.getElementById('jsonBoxBattGray').style.width = (100-m[1])+'%';
 			}else{
 				console.log("Cannot parse battery charge info", data['battery']);
+				document.getElementById('jsonBoxBattVal').innerText = '';
 				document.getElementById('jsonBoxBattGreen').style.width = '0px';
 				document.getElementById('jsonBoxBattGray').style.width = '0px';
 			}
 		}else{
+			document.getElementById('jsonBoxBattVal').innerText = '';
 			document.getElementById('jsonBoxBattGreen').style.width = '0';
 			document.getElementById('jsonBoxBattGray').style.width = '0';
 		}
@@ -86,7 +89,7 @@ function processJSON(jsonPath){
 		}else{
 			document.getElementById('jsonBoxUnits').innerHTML = "";
 		}
-		document.getElementById('jsonTimestamp').innerHTML = jqXHR.getResponseHeader("Last-Modified");
+		document.getElementById('jsonTimestamp').innerHTML = jqXHR.getResponseHeader("Date");
 	})
 	.done(function(json){
 		//console.log("done", json);
@@ -96,6 +99,7 @@ function processJSON(jsonPath){
 		document.getElementById('jsonBoxPrice').innerHTML = "N/A";
 		document.getElementById('jsonBoxDescription').innerHTML = "N/A";
 		document.getElementById('jsonBoxFlow').innerHTML = "N/A";
+		document.getElementById('jsonBoxBattVal').innerText = '';
 		document.getElementById('jsonBoxBattGreen').style.width = '0';
 		document.getElementById('jsonBoxBattGray').style.width = '0';
 		document.getElementById('jsonBoxUnits').innerHTML = "N/A";
@@ -128,6 +132,9 @@ function callJson(i) {
 $.ajaxSetup({'cache':true, timeout:300});
 document.getElementById('jsonBoxBatt').onclick=function(e){
 	//console.log(e);
+	if(!e.target.classList.contains('adminMode')){
+		return;
+	}
 	var val = Math.round(100*e.offsetX/e.target.offsetWidth);
 	if(val<0 || val>100){
 		console.warn("Computation error: e.offsetX/e.target.offsetWidth=...",e.offsetX,e.target.offsetWidth,val);
@@ -142,6 +149,26 @@ document.getElementById('jsonBoxBatt').onclick=function(e){
 		//console.log("Charge set to "+e.offsetX);
 		console.log("Charge set to "+val);
 	});
+};
+document.getElementById('chkAdmin').onclick=function(e){
+	console.log(e);
+	console.log(e.target);
+	if(e.target.checked){
+		document.getElementById('jsonBoxBatt').classList.add('adminMode');
+	}else{
+		document.getElementById('jsonBoxBatt').classList.remove('adminMode');
+	}
+};
+document.getElementById('chkSrc').onclick=function(e){
+	console.log(e);
+	console.log(e.target);
+	if(e.target.checked){
+		document.getElementById('ctrl-box-src').classList.remove('hidden');
+		document.getElementById('jsonTimestamp').classList.remove('hidden');
+	}else{
+		document.getElementById('ctrl-box-src').classList.add('hidden');
+		document.getElementById('jsonTimestamp').classList.add('hidden');
+	}
 };
 document.getElementById('rechargeButton').onclick=function(e){
 	console.log(e);

@@ -33,6 +33,16 @@ public class SampleController {
 	String getIndex() {
 		return "html/index";
 	}
+	
+	@RequestMapping("/smartCar")
+	String getSmartCarPage() {
+		return "html/smartCar";
+	}
+	
+	@RequestMapping("/producer")
+	String getProducerPage() {
+		return "html/producer";
+	}
 
 	@CrossOrigin
 	@RequestMapping("/plugin")
