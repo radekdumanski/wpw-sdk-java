@@ -264,6 +264,7 @@ public class SmartCar {
 			JSONObject chargerObj = new JSONObject();
 			updateFlow(chargerObj, JsonTags.FLOW, "Charging the battery...");
 			updateFlow(obj, JsonTags.FLOW, "Charging the car...");
+			updateFlow(chargerObj, JsonTags.UNITS, String.valueOf(unitsToSupply));
 			
 			for (int i = 0; i <= unitsToSupply; i = i + 1) {
 				updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel + i));
