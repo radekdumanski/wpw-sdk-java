@@ -24,11 +24,17 @@ function processJSON(jsonPath){
 		}
 		if(data.hasOwnProperty('battery')){
 			var m = data['battery'].match(/^([0-9]+)$/);
-			// In the past the value was passed as "99%"
-			// In the future it is likely to be ex. "167kWh"
-			if(m !== null && m.length>0 && m[1]>=0 && m[1]<=100){
-				// TODO: parseInt()
-				document.getElementById('jsonBoxBatt').innerText = m[1];
+			if(m !== null && m.length>0){
+				if(data.hasOwnProperty('units')){
+					var m2 = data['units'].match(/^([0-9]+)$/);
+					if(m2 !== null && m2.length>0){
+						document.getElementById('jsonBoxBatt').innerText = m[1] + ' / ' + m2[1];
+					}else{
+						document.getElementById('jsonBoxBatt').innerText = m[1] + ' / ?';
+					}
+				}else{
+					document.getElementById('jsonBoxBatt').innerText = m[1];
+				}
 			}else{
 				console.log("Cannot parse battery charge info", data['battery']);
 				document.getElementById('jsonBoxBatt').innerText = '';
