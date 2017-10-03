@@ -11,7 +11,13 @@ package com.worldpay.innovation.wpwithin;
  * @author worldpay
  */
 public class WPWithinGeneralException extends RuntimeException {
+	private String msg;
     public WPWithinGeneralException(String msg) {
-        System.out.println(msg);
+    	this.msg = msg;
+    };
+    
+    @Override
+    public String getMessage() {
+    	return this.msg;
     }
 }

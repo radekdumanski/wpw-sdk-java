@@ -312,4 +312,10 @@ public class SmartCar {
 			return false;
 		}
 	}
+	void SetJsonException(String msg) {
+		JSONObject obj = new JSONObject();
+		updateFlow(obj, JsonTags.FLOW, msg);
+		this.jsonObject = obj;
+		this.chargerJsonObject = obj;
+	}
 }
