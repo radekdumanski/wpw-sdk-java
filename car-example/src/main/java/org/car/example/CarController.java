@@ -1,5 +1,7 @@
 package org.car.example;
 
+import com.worldpay.innovation.wpwithin.WPWithinGeneralException;
+
 public class CarController extends Thread {
 	private SmartCar smartCar;
 
@@ -15,7 +17,6 @@ public class CarController extends Thread {
 	@Override
 	public void run() {
 		try {
-			
 			smartCar.setup("smart-car", "Smart car example.");
 			// flow ~plugin
 			Thread.sleep(1000);
@@ -37,7 +38,12 @@ public class CarController extends Thread {
 			smartCar.startCharging();
 			smartCar.setCarController(null);
 		} catch (InterruptedException v) {
-			System.out.println(v);
+			v.printStackTrace();
+		} catch (WPWithinGeneralException wp) {
+			wp.printStackTrace();
+			System.out.println(wp.getMessage());
+			smartCar.SetJsonException(wp.getMessage());
+			smartCar.setCarController(null);
 		}
 	}
 }
