@@ -4,11 +4,11 @@
 	<parent>
 		<groupId>com.worldpay.innovation</groupId>
 		<artifactId>wpw-sdk-java</artifactId>
-		<version>0.0.1-alpha</version>
+		<version>v0.7-alpha</version>
 	</parent>
 	<groupId>com.worldpay.innovation.wpw-sdk-java</groupId>
 	<artifactId>devicescanner</artifactId>
-	<version>0.0.1-alpha</version>
+	<version>v0.7-alpha</version>
 	<packaging>jar</packaging>
 
 	<name>devicescanner</name>
@@ -30,7 +30,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.worldpay.innovation.wpw-sdk-java.devicescanner.Main</mainClass>
+							<mainClass>com.worldpay.innovation.wpwithin.devicescanner.Main</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
@@ -57,7 +57,7 @@
 		<dependency>
 			<groupId>com.worldpay.innovation.wpw-sdk-java</groupId>
 			<artifactId>sdk</artifactId>
-			<version>0.0.1-alpha</version>
+			<version>v0.7-alpha</version>
 		</dependency>
 	</dependencies>
 </project>

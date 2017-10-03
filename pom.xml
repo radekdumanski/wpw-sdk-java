@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.worldpay.innovation</groupId>
   <artifactId>wpw-sdk-java</artifactId>
-  <version>0.0.1-alpha</version>
+  <version>v0.7-alpha</version>
   <packaging>pom</packaging>
   <build>
 		<defaultGoal>clean install</defaultGoal>
@@ -13,7 +13,5 @@
   	<module>sample-consumer</module>
   	<module>sample-producer</module>
   	<module>sample-producer-callbacks</module>
-  	<module>car-charger</module>
-  	<module>car-example</module>
   </modules>
 </project>
