@@ -14,6 +14,7 @@ import com.worldpay.innovation.wpwithin.types.WWPrice;
 import com.worldpay.innovation.wpwithin.types.WWPricePerUnit;
 import com.worldpay.innovation.wpwithin.types.WWService;
 import com.worldpay.innovation.wpwithin.types.WWServiceDeliveryToken;
+import com.worldpay.innovation.wpwithin.types.WWTotalPriceResponse;
 
 public class Main {
 
@@ -88,7 +89,7 @@ public class Main {
     private static EventListener wpWithinEventListener = new EventListener() {
 
         @Override
-        public void onBeginServiceDelivery(int serviceID, WWServiceDeliveryToken wwServiceDeliveryToken, int unitsToSupply) throws WPWithinGeneralException {
+        public void onBeginServiceDelivery(int serviceID, int servicePriceID, WWServiceDeliveryToken wwServiceDeliveryToken, int unitsToSupply) throws WPWithinGeneralException {
 
             try {
                 System.out.println("event from core - onBeginServiceDelivery()");
@@ -123,6 +124,38 @@ public class Main {
                 e.printStackTrace();
             }
         }
+
+		@Override
+		public void onServiceDiscoveryEvent(String remoteAddr) throws WPWithinGeneralException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onServicePricesEvent(String remoteAddr, int serviceId) throws WPWithinGeneralException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onServiceTotalPriceEvent(String remoteAddr, int serviceId, WWTotalPriceResponse totalPriceResponse)
+				throws WPWithinGeneralException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onMakePaymentEvent(int totalPrice, String orderCurrency, String clientToken,
+				String orderDescription, String uuid) throws WPWithinGeneralException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onErrorEvent(String msg) throws WPWithinGeneralException {
+			// TODO Auto-generated method stub
+			
+		}
     };
 
     private static final Listener rpcAgentListener = new Listener() {
