@@ -1,5 +1,5 @@
 function refreshChargerStatus() {
-	processJSON("/getChargerStatus");
+	processJSON("http://localhost/getChargerStatus");
 }
 
 function processJSON(jsonPath){
