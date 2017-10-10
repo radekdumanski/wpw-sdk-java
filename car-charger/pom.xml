@@ -15,37 +15,45 @@
 	<name>car-charger</name>
 	<url>http://maven.apache.org</url>
 	<build>
-		<defaultGoal>clean compile assembly:single</defaultGoal>
+		<!--  <defaultGoal>clean compile assembly:single</defaultGoal> -->
+		<defaultGoal>clean package</defaultGoal>
 		<plugins>
-			<!-- any other plugins -->
 			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<fork>true</fork>
+					<mainClass>org.car.charger.Main</mainClass>
+				</configuration>
 				<executions>
 					<execution>
-						<phase>package</phase>
 						<goals>
-							<goal>single</goal>
+							<goal>repackage</goal>
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>org.car.charger.Main</mainClass>
-						</manifest>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<appendAssemblyId>false</appendAssemblyId>
-				</configuration>
 			</plugin>
+				<plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>2.4</version>
+            <configuration>
+                <archive>
+                    <index>true</index>
+                    <manifest>
+                        <mainClass>org.car.charger.Main</mainClass>
+                    </manifest>
+                </archive>
+            </configuration>
+        </plugin>
 		</plugins>
 	</build>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- Spring boot main class -->
+		<start-class>org.car.charger.Main</start-class>
 	</properties>
 	<dependencies>
 		<dependency>
