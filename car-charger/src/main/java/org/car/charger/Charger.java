@@ -114,8 +114,8 @@ public class Charger {
 		public void onBeginServiceDelivery(int serviceID, int servicePriceID,
 				WWServiceDeliveryToken wwServiceDeliveryToken, int unitsToSupply) throws WPWithinGeneralException {
 			JSONObject chargerObj = new JSONObject();
-			updateFlow(chargerObj, JsonTags.FLOW, "Starting service: "+wpw.getDevice().getServices().get(serviceID).getName());
-			updateFlow(chargerObj, JsonTags.DESCRIPTION, "Service to provide: "+wpw.getDevice().getServices().get(serviceID).getPrices().get(servicePriceID).getDescription());
+			updateFlow(chargerObj, JsonTags.FLOW, "Service delivery phase: "+wpw.getDevice().getServices().get(serviceID).getName());
+			updateFlow(chargerObj, JsonTags.DESCRIPTION, "Option to provide: "+wpw.getDevice().getServices().get(serviceID).getPrices().get(servicePriceID).getDescription());
 			updateFlow(chargerObj, JsonTags.UNITS, "UnitsToSupply: "+unitsToSupply);
 			setChargerJsonObject(chargerObj);
 		}
@@ -123,22 +123,10 @@ public class Charger {
 		@Override
 		public void onEndServiceDelivery(int serviceID, WWServiceDeliveryToken wwServiceDeliveryToken,
 				int unitsReceived) throws WPWithinGeneralException {
-
-			try {
-
-				System.out.printf("Charging completed - stopping service: %s\n",
-						wpw.getDevice().getServices().get(serviceID).getName());
-				System.out.printf("Units supplied: %d\n", unitsReceived);
-				System.out.printf("SDT.Key: %s\n", wwServiceDeliveryToken.getKey());
-				System.out.printf("SDT.Expiry: %s\n", wwServiceDeliveryToken.getExpiry());
-				System.out.printf("SDT.Issued: %s\n", wwServiceDeliveryToken.getIssued());
-				System.out.printf("SDT.Signature: %s\n",
-						Base64.getEncoder().encodeToString(wwServiceDeliveryToken.getSignature()));
-				System.out.printf("SDT.RefundOnExpiry: %b\n", wwServiceDeliveryToken.isRefundOnExpiry());
-			} catch (Exception e) {
-
-				e.printStackTrace();
-			}
+			
+			JSONObject chargerObj = new JSONObject();
+			updateFlow(chargerObj, JsonTags.FLOW, "Broadcasting...");
+			chargerJsonObject = chargerObj;
 		}
 
 		@Override
@@ -148,7 +136,7 @@ public class Charger {
 			JSONObject chargerObj = new JSONObject();
 			updateFlow(chargerObj, JsonTags.FLOW, "Making payment...");
 			updateFlow(chargerObj, JsonTags.DESCRIPTION, "Order description: "+orderDescription);
-			updateFlow(chargerObj, JsonTags.UNITS, "Total price: "+totalPrice+orderCurrency);
+			updateFlow(chargerObj, JsonTags.UNITS, "Total price: "+((float) totalPrice)/100+orderCurrency);
 			setChargerJsonObject(chargerObj);
 		}
 
@@ -164,7 +152,8 @@ public class Charger {
 		@Override
 		public void onServiceDiscoveryEvent(String remoteAddr) throws WPWithinGeneralException {
 			JSONObject chargerObj = new JSONObject();
-			updateFlow(chargerObj, JsonTags.FLOW, "Client connected from: "+remoteAddr);
+			updateFlow(chargerObj, JsonTags.FLOW, "Service query phase...");
+			updateFlow(chargerObj, JsonTags.DESCRIPTION, "Connected client: "+remoteAddr);
 			setChargerJsonObject(chargerObj);
 		}
 
@@ -183,7 +172,7 @@ public class Charger {
 			
 			JSONObject chargerObj = new JSONObject();
 			updateFlow(chargerObj, JsonTags.FLOW, "Service negotiation...2/2"); 
-			updateFlow(chargerObj, JsonTags.DESCRIPTION, "Option selected: "+wpw.getDevice().getServices().get(serviceId).getPrices().get(totalPriceResponse.getPriceId()));
+			updateFlow(chargerObj, JsonTags.DESCRIPTION, "Option selected: "+wpw.getDevice().getServices().get(serviceId).getPrices().get(totalPriceResponse.getPriceId()).getDescription());
 			setChargerJsonObject(chargerObj);
 		}
 	};

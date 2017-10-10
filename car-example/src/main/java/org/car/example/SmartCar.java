@@ -196,7 +196,7 @@ public class SmartCar {
 			updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
 			updateFlow(obj, JsonTags.UNITS, "Units to supply: " + tpr.getUnitsToSupply());
 			updateFlow(obj, JsonTags.PRICE,
-					"Total price: " + (float) (tpr.getTotalPrice() / 100) + tpr.getCurrencyCode());
+					"Total price: " +  ((float)tpr.getTotalPrice() / 100) + tpr.getCurrencyCode());
 			
 			this.jsonObject = obj;
 			this.totalPriceResponse = tpr;
@@ -214,7 +214,7 @@ public class SmartCar {
 		if (pResp != null) {
 			updateFlow(obj, JsonTags.FLOW, "Payment phase.");
 			updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
-			updateFlow(obj, JsonTags.PRICE, "Total paid: " + (float) (pResp.getTotalPaid() / 100) + priceCurrency);
+			updateFlow(obj, JsonTags.PRICE, "Total paid: " +  ((float)pResp.getTotalPaid() / 100) + priceCurrency);
 			
 			this.jsonObject = obj;
 			this.paymentResponse = pResp;
