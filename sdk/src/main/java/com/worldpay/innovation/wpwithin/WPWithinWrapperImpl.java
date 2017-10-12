@@ -9,8 +9,9 @@ import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -53,7 +54,7 @@ import com.worldpay.innovation.wpwithin.types.WWTotalPriceResponse;
  */
 public class WPWithinWrapperImpl implements WPWithinWrapper {
 
-	private static final Logger log = Logger.getLogger(WPWithinWrapperImpl.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(WPWithinWrapperImpl.class.getName());//LggerLoggerFactory. getLogger(WPWithinWrapperImpl.class.getName());
 
 	private String hostConfig;
 	private Integer portConfig;
@@ -69,6 +70,7 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 
 	public WPWithinWrapperImpl(String rpcHost, Integer rpcPort, boolean startRPCAgent, EventListener eventListener,
 			int rpcCallbackPort, Listener launcherListener, String rpcAgentLogFile) {
+		// logger.
 		shutdownOnSigterm();
 		this.hostConfig = rpcHost;
 		this.portConfig = rpcPort;
@@ -76,7 +78,7 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 
 			if (rpcCallbackPort <= 0 || rpcCallbackPort > 65535) {
 
-				throw new WPWithinGeneralException("Callback port must be >0 and <65535");
+				throw new WPWithinGeneralException("Callback port must be >0 and <65535", null);
 			}
 
 			eventServer = new EventServer();
@@ -115,8 +117,8 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 		try {
 			transport.open();
 		} catch (TTransportException ex) {
-			Logger.getLogger(WPWithinWrapperImpl.class.getName()).log(Level.SEVERE, "Could not open transport socket",
-					ex);
+			logger.error("Could not open transport socket");
+			throw new WPWithinGeneralException("Could not open transport socket", ex);
 		}
 
 		TProtocol protocol = new TBinaryProtocol(transport);
@@ -140,26 +142,25 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 
 	@Override
 	public void setup(String name, String description) throws WPWithinGeneralException {
-
 		try {
 			getClient().setup(name, description);
 		} catch (TException ex) {
-			Logger.getLogger(WPWithinWrapperImpl.class.getName()).log(Level.SEVERE, "Failure to setup in the wrapper",
-					ex);
-			throw new WPWithinGeneralException("Failure to setup in the wrapper");
+			logger.error("Failure to setup in the wrapper", ex);
+			throw new WPWithinGeneralException("Failure to setup in the wrapper", ex);
 		}
 	}
 
 	@Override
 	public void addService(WWService theService) throws WPWithinGeneralException {
 
-		Logger.getLogger(WPWithinWrapperImpl.class.getName()).log(Level.INFO, "About to add service");
+		logger.info("About to add service");
 		try {
 			getClient().addService(ServiceAdapter.convertWWService(theService));
 		} catch (TException ex) {
-			throw new WPWithinGeneralException("Add service to producer failed with Rpc call to the SDK lower level");
+			logger.error("Add service to producer failed with Rpc call to the SDK lower level");
+			throw new WPWithinGeneralException("Add service to producer failed with Rpc call to the SDK lower level", ex);
 		}
-		Logger.getLogger(WPWithinWrapperImpl.class.getName()).log(Level.INFO, "Should have successfully added service");
+		logger.info("Should have successfully added service");
 
 	}
 
@@ -168,9 +169,8 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 		try {
 			getClient().removeService(ServiceAdapter.convertWWService(svc));
 		} catch (TException ex) {
-			Logger.getLogger(WPWithinWrapperImpl.class.getName()).log(Level.SEVERE,
-					"Removal of service failed in the wrapper", ex);
-			throw new WPWithinGeneralException("Removal of service failed in the wrapper");
+			logger.error("Removal of service failed in the wrapper");
+			throw new WPWithinGeneralException("Removal of service failed in the wrapper", ex);
 		}
 	}
 
@@ -181,9 +181,8 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 			getClient().initConsumer(scheme, hostname, port, urlPrefix, serverId,
 					HCECardAdapter.convertWWHCECard(hceCard), pspConfig);
 		} catch (TException ex) {
-			Logger.getLogger(WPWithinWrapperImpl.class.getName()).log(Level.SEVERE,
-					"Initiating the consumer failed in the wrapper", ex);
-			throw new WPWithinGeneralException("Initiating the consumer failed in the wrapper");
+			logger.error("Initiating the consumer failed in the wrapper");
+			throw new WPWithinGeneralException("Initiating the consumer failed in the wrapper", ex);
 		}
 	}
 
@@ -192,9 +191,8 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 		try {
 			getClient().initProducer(pspConfig);
 		} catch (TException ex) {
-			Logger.getLogger(WPWithinWrapperImpl.class.getName()).log(Level.SEVERE,
-					"Initiating the producer failed in the wrapper", ex);
-			throw new WPWithinGeneralException("Initiating the producer failed in the wrapper");
+			logger.error("Initiating the producer failed in the wrapper");
+			throw new WPWithinGeneralException("Initiating the producer failed in the wrapper", ex);
 		}
 	}
 
@@ -203,8 +201,8 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 		try {
 			return DeviceAdapter.convertDevice(getClient().getDevice());
 		} catch (TException ex) {
-			Logger.getLogger(WPWithinWrapperImpl.class.getName()).log(Level.SEVERE, "Get device in wrapper failed", ex);
-			throw new WPWithinGeneralException("Get device in wrapper failed");
+			logger.error("Get device in wrapper failed");
+			throw new WPWithinGeneralException("Get device in wrapper failed", ex);
 		}
 	}
 
@@ -213,9 +211,8 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 		try {
 			getClient().startServiceBroadcast(timeoutMillis);
 		} catch (TException ex) {
-			Logger.getLogger(WPWithinWrapperImpl.class.getName()).log(Level.SEVERE,
-					"Start service broadcast in wrapper failed", ex);
-			throw new WPWithinGeneralException("Start service broadcast in wrapper failed");
+			logger.error("Start service broadcast in wrapper failed");
+			throw new WPWithinGeneralException("Start service broadcast in wrapper failed", ex);
 		}
 	}
 
@@ -224,9 +221,8 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 		try {
 			getClient().stopServiceBroadcast();
 		} catch (TException ex) {
-			Logger.getLogger(WPWithinWrapperImpl.class.getName()).log(Level.SEVERE, "Stop service broadcast failed",
-					ex);
-			throw new WPWithinGeneralException("Stop service broadcast failed");
+			logger.error("Stop service broadcast failed");
+			throw new WPWithinGeneralException("Stop service broadcast failed", ex);
 		}
 	}
 
@@ -235,9 +231,8 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 		try {
 			return ServiceMessageAdapter.convertServiceMessages(getClient().deviceDiscovery(timeoutMillis));
 		} catch (TException ex) {
-			Logger.getLogger(WPWithinWrapperImpl.class.getName()).log(Level.SEVERE,
-					"Failed device discovery in wrapper", ex);
-			throw new WPWithinGeneralException("Failed device discovery in wrapper");
+			logger.error("Failed device discovery in wrapper");
+			throw new WPWithinGeneralException("Failed device discovery in wrapper", ex);
 		}
 	}
 
@@ -247,9 +242,8 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 		try {
 			return ServiceDetailsAdapter.convertServiceDetails(getClient().requestServices());
 		} catch (TException ex) {
-			Logger.getLogger(WPWithinWrapperImpl.class.getName()).log(Level.SEVERE,
-					"Request Services failed in wrapper", ex);
-			throw new WPWithinGeneralException("Request Services failed in wrapper");
+			logger.error("Request Services failed in wrapper");
+			throw new WPWithinGeneralException("Request Services failed in wrapper", ex);
 		}
 
 	}
@@ -259,9 +253,8 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 		try {
 			return PriceAdapter.convertServicePrices(getClient().getServicePrices(serviceId));
 		} catch (TException ex) {
-			Logger.getLogger(WPWithinWrapperImpl.class.getName()).log(Level.SEVERE,
-					"Get Service Prices failed in wrapper", ex);
-			throw new WPWithinGeneralException("Get Service Prices failed in wrapper");
+			logger.error("Get Service Prices failed in wrapper");
+			throw new WPWithinGeneralException("Get Service Prices failed in wrapper", ex);
 		}
 	}
 
@@ -272,9 +265,8 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 			return TotalPriceResponseAdapter
 					.convertTotalPriceResponse(getClient().selectService(serviceId, numberOfUnits, priceId));
 		} catch (TException ex) {
-			Logger.getLogger(WPWithinWrapperImpl.class.getName()).log(Level.SEVERE, "Select service failed in wrapper",
-					ex);
-			throw new WPWithinGeneralException("Select service failed in wrapper");
+			logger.error("Select service failed in wrapper");
+			throw new WPWithinGeneralException("Select service failed in wrapper", ex);
 		}
 	}
 
@@ -285,9 +277,8 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 			return PaymentResponseAdapter.convertPaymentResponse(
 					getClient().makePayment(TotalPriceResponseAdapter.convertWWTotalPriceResponse(request)));
 		} catch (TException ex) {
-			Logger.getLogger(WPWithinWrapperImpl.class.getName()).log(Level.SEVERE,
-					"Failed to make payment in the wrapper", ex);
-			throw new WPWithinGeneralException("Failed to make payment in the wrapper");
+			logger.error("Failed to make payment in the wrapper");
+			throw new WPWithinGeneralException("Failed to make payment in the wrapper", ex);
 		}
 	}
 
@@ -295,16 +286,12 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 	public WWServiceDeliveryToken beginServiceDelivery(int serviceId, WWServiceDeliveryToken serviceDeliveryToken,
 			Integer unitsToSupply) throws WPWithinGeneralException {
 		try {
-
 			ServiceDeliveryToken sdt = getClient().beginServiceDelivery(serviceId,
 					ServiceDeliveryTokenAdapter.convertWWServiceDeliveryToken(serviceDeliveryToken), unitsToSupply);
-
 			return ServiceDeliveryTokenAdapter.convertServiceDeliveryToken(sdt);
-
 		} catch (TException ex) {
-			Logger.getLogger(WPWithinWrapperImpl.class.getName()).log(Level.SEVERE,
-					"Failed to begin Service Delivery in the wrapper", ex);
-			throw new WPWithinGeneralException("Failed to begin Service Delivery in the wrapper");
+			logger.error("Failed to begin Service Delivery in the wrapper");
+			throw new WPWithinGeneralException("Failed to begin Service Delivery in the wrapper", ex);
 		}
 	}
 
@@ -314,12 +301,10 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 		try {
 			ServiceDeliveryToken sdt = getClient().endServiceDelivery(serviceId,
 					ServiceDeliveryTokenAdapter.convertWWServiceDeliveryToken(serviceDeliveryToken), unitsReceived);
-
 			return ServiceDeliveryTokenAdapter.convertServiceDeliveryToken(sdt);
 		} catch (TException ex) {
-			Logger.getLogger(WPWithinWrapperImpl.class.getName()).log(Level.SEVERE,
-					"Failed to end Service Delivery in the wrapper", ex);
-			throw new WPWithinGeneralException("Failed to end Service Delivery in the wrapper");
+			logger.error("Failed to end Service Delivery in the wrapper");
+			throw new WPWithinGeneralException("Failed to end Service Delivery in the wrapper", ex);
 		}
 	}
 
@@ -334,12 +319,12 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 				if (launcher != null) {
 					if (launcher.getProcessHandle().isAlive()) {
 						launcher.stopProcess();
-						System.out.println("RPC Agent Killed");
+						logger.info("RPC Agent Killed");
 					}
 				}
-				System.out.println("RPC Agent Closed");
+				logger.info("RPC Agent Closed");
 			} catch (Throwable e) {
-				System.out.println("RPC Agent Killed");
+				logger.info("RPC Agent Killed");
 				if (launcher != null) {
 					launcher.stopProcess();
 				}

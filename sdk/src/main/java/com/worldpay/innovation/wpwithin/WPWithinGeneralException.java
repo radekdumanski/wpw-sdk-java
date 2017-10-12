@@ -6,15 +6,26 @@
 
 package com.worldpay.innovation.wpwithin;
 
+import org.apache.thrift.TException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author worldpay
  */
 public class WPWithinGeneralException extends RuntimeException {
 	private String msg;
+	private static final Logger logger = LoggerFactory.getLogger(WPWithinGeneralException.class.getName());
+	
     public WPWithinGeneralException(String msg) {
+    	logger.error(msg);
     	this.msg = msg;
     };
+    public WPWithinGeneralException(String msg, TException te) {
+    	logger.error(msg, te);
+    	this.msg = msg;
+	}
     
     @Override
     public String getMessage() {
