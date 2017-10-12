@@ -54,7 +54,7 @@ import com.worldpay.innovation.wpwithin.types.WWTotalPriceResponse;
  */
 public class WPWithinWrapperImpl implements WPWithinWrapper {
 
-	private static final Logger logger = LoggerFactory.getLogger(WPWithinWrapperImpl.class.getName());//LggerLoggerFactory. getLogger(WPWithinWrapperImpl.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(WPWithinWrapperImpl.class.getName());
 
 	private String hostConfig;
 	private Integer portConfig;
@@ -70,7 +70,6 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 
 	public WPWithinWrapperImpl(String rpcHost, Integer rpcPort, boolean startRPCAgent, EventListener eventListener,
 			int rpcCallbackPort, Listener launcherListener, String rpcAgentLogFile) {
-		// logger.
 		shutdownOnSigterm();
 		this.hostConfig = rpcHost;
 		this.portConfig = rpcPort;
@@ -78,7 +77,7 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 
 			if (rpcCallbackPort <= 0 || rpcCallbackPort > 65535) {
 
-				throw new WPWithinGeneralException("Callback port must be >0 and <65535", null);
+				throw new WPWithinGeneralException("Callback port must be >0 and <65535");
 			}
 
 			eventServer = new EventServer();
