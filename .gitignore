@@ -21,6 +21,3 @@ uuid.txt
 
 # json
 *.json
-
-#log4j
-log4j.properties

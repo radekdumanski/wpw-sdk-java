@@ -49,7 +49,6 @@ public class Main {
             prices.put(ccPrice.getId(), ccPrice);
 
             svc.setPrices(prices);
-
             wpw.addService(svc);
 
             Map<String, String> pspConfig = new HashMap<>();
