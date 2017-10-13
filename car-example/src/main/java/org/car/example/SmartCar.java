@@ -35,6 +35,7 @@ public class SmartCar {
 	private JSONObject jsonObject;
 	private CarController carController = null;
 	private String priceCurrency;
+	private Config config;
 
 	public CarController getCarController() {
 		return carController;
@@ -44,10 +45,11 @@ public class SmartCar {
 		this.carController = carController;
 	}
 
-	SmartCar(WPWithinWrapper wpw) {
+	SmartCar(WPWithinWrapper wpw, Config config) {
 		JSONObject obj = new JSONObject();
 		this.wpw = wpw;
 		this.chargeLevel = 99;
+		this.config = config;
 		updateFlow(obj, JsonTags.FLOW, "Smart Car Web service.");
 		updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
 		this.jsonObject = obj;
@@ -106,30 +108,8 @@ public class SmartCar {
 		if (devicesSet != null && devicesSet.iterator().hasNext()) {
 			// Will pick the first device discovered
 			WWServiceMessage svcMsg = devicesSet.iterator().next();
-			WWHCECard card = new WWHCECard();
-			card.setFirstName("Bilbo");
-			card.setLastName("Baggins");
-			card.setCardNumber("5555555555554444");
-			card.setExpMonth(11);
-			card.setExpYear(2018);
-			card.setType("Card");
-			card.setCvc("113");
-
-			Map<String, String> pspConfig = new HashMap<>();
-
-			// Worldpay Online Payments
-			pspConfig.put(PSPConfig.PSP_NAME, PSPConfig.WORLDPAY_ONLINE_PAYMENTS);
-			pspConfig.put(PSPConfig.API_ENDPOINT, "https://api.worldpay.com/v1");
-
-			// Worldpay Total US / SecureNet
-			// pspConfig.put(PSPConfig.PSP_NAME, PSPConfig.SECURE_NET);
-			// pspConfig.put(PSPConfig.API_ENDPOINT,
-			// "https://gwapi.demo.securenet.com/api");
-			// pspConfig.put(PSPConfig.APP_VERSION, "0.1");
-			// pspConfig.put(PSPConfig.DEVELOPER_ID, "12345678");
-
 			wpw.initConsumer(svcMsg.getScheme(), svcMsg.getHostname(), svcMsg.getPortNumber(), svcMsg.getUrlPrefix(),
-					wpw.getDevice().getUid(), card, pspConfig);
+					wpw.getDevice().getUid(), config.getHceCard(), config.getPspConfig());
 		}
 	}
 

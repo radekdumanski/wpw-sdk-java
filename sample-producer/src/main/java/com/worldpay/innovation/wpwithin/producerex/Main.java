@@ -1,10 +1,13 @@
 package com.worldpay.innovation.wpwithin.producerex;
 
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.stream.Collectors;
 
-import com.worldpay.innovation.wpwithin.PSPConfig;
+import com.google.gson.Gson;
 import com.worldpay.innovation.wpwithin.WPWithinGeneralException;
 import com.worldpay.innovation.wpwithin.WPWithinWrapper;
 import com.worldpay.innovation.wpwithin.WPWithinWrapperImpl;
@@ -15,18 +18,15 @@ import com.worldpay.innovation.wpwithin.types.WWService;
 
 public class Main {
 
-    public static void main(String[] args) {
+    private static Config config;
+	private static String rpcLogFile;
+	public static void main(String[] args) {
 
         try {
 
             System.out.println("WorldpayWithin Sample Producer...");
-
-            // define log file name for the rpc agent,
-            // e.g. "rpc-within-producerex.log";
-            String[] splitedPkgName = Main.class.getPackage().getName().split("\\.");
-            String rpcLogFile = "rpc-within-" + splitedPkgName[splitedPkgName.length-1] + ".log";
-            
-            WPWithinWrapper wpw = new WPWithinWrapperImpl("127.0.0.1", 10000, true, rpcAgentListener, rpcLogFile);
+            loadConfig();
+            WPWithinWrapper wpw = new WPWithinWrapperImpl(config.getHost(), config.getPort(), true, rpcAgentListener, rpcLogFile);
 
             wpw.setup("Producer Example", "Example WorldpayWithin producer");
 
@@ -51,28 +51,7 @@ public class Main {
             svc.setPrices(prices);
             wpw.addService(svc);
 
-            Map<String, String> pspConfig = new HashMap<>();
-
-            // Worldpay Online Payments
-//            pspConfig.put(PSPConfig.PSP_NAME, PSPConfig.WORLDPAY_ONLINE_PAYMENTS);
-//            pspConfig.put(PSPConfig.HTE_PUBLIC_KEY, "T_C_03eaa1d3-4642-4079-b030-b543ee04b5af");
-//            pspConfig.put(PSPConfig.HTE_PRIVATE_KEY, "T_S_f50ecb46-ca82-44a7-9c40-421818af5996");
-//            pspConfig.put(PSPConfig.API_ENDPOINT, "https://api.worldpay.com/v1");
-//            pspConfig.put(PSPConfig.MERCHANT_CLIENT_KEY, "T_C_03eaa1d3-4642-4079-b030-b543ee04b5af");
-//            pspConfig.put(PSPConfig.MERCHANT_SERVICE_KEY, "T_S_f50ecb46-ca82-44a7-9c40-421818af5996");
-
-            // Worldpay Total US / SecureNet
-            pspConfig.put(PSPConfig.PSP_NAME, PSPConfig.SECURE_NET);
-            pspConfig.put(PSPConfig.API_ENDPOINT, "https://gwapi.demo.securenet.com/api");
-            pspConfig.put(PSPConfig.HTE_PUBLIC_KEY, "8c0ce953-455d-4c12-8d14-ff20d565e485");
-            pspConfig.put(PSPConfig.HTE_PRIVATE_KEY, "KZ9kWv2EPy7M");
-            pspConfig.put(PSPConfig.DEVELOPER_ID, "12345678");
-            pspConfig.put(PSPConfig.APP_VERSION, "0.1");
-            pspConfig.put(PSPConfig.PUBLIC_KEY, "8c0ce953-455d-4c12-8d14-ff20d565e485");
-            pspConfig.put(PSPConfig.SECURE_KEY, "KZ9kWv2EPy7M");
-            pspConfig.put(PSPConfig.SECURE_NET_ID, "8008609");
-
-            wpw.initProducer(pspConfig);
+            wpw.initProducer(config.getPspConfig());
 
             wpw.startServiceBroadcast(0);
 
@@ -92,4 +71,17 @@ public class Main {
             System.out.printf("stderr: \n%s\n", errOutput);
         }
     };
+    /**
+     * Loads config and path to logfile
+     */
+    private static void loadConfig() {
+        // define log file name for the rpc agent (based on the package name),
+        // e.g. "rpc-within-consumerex.log";
+        String[] splitedPkgName = Main.class.getPackage().getName().split("\\.");
+        rpcLogFile = "rpc-within-" + splitedPkgName[splitedPkgName.length-1] + ".log";
+		Gson gson = new Gson();
+		InputStream stream = Config.class.getResourceAsStream("/sample-producer.json");
+		String result = new BufferedReader(new InputStreamReader(stream)).lines().collect(Collectors.joining("\n"));
+		config = gson.fromJson(result, Config.class);
+    }
 }

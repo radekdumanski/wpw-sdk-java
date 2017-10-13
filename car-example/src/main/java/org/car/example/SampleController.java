@@ -1,5 +1,10 @@
 package org.car.example;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.stream.Collectors;
+
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -7,18 +12,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
 import com.worldpay.innovation.wpwithin.WPWithinWrapper;
 import com.worldpay.innovation.wpwithin.WPWithinWrapperImpl;
 import com.worldpay.innovation.wpwithin.rpc.launcher.Listener;
 
 @Controller
 public class SampleController {
+	private static String rpcLogFile;
+	private static Config config;
 	private SmartCar smartCar;
 	private WPWithinWrapper wpw;
 
 	public SampleController() {
-		this.wpw = new WPWithinWrapperImpl("127.0.0.1", 10005, true, rpcAgentListener, "car-example.log");
-		smartCar = new SmartCar(wpw);
+		loadConfig();
+		this.wpw = new WPWithinWrapperImpl(config.getHost(), config.getPort(), true, rpcAgentListener, rpcLogFile);
+		smartCar = new SmartCar(wpw, config);
 	}
 
 	@CrossOrigin
@@ -33,12 +42,12 @@ public class SampleController {
 	String getIndex() {
 		return "html/index";
 	}
-	
+
 	@RequestMapping("/smartCar")
 	String getSmartCarPage() {
 		return "html/smartCar";
 	}
-	
+
 	@RequestMapping("/producer")
 	String getProducerPage() {
 		return "html/producer";
@@ -57,13 +66,6 @@ public class SampleController {
 	public String getStatus() {
 		return smartCar.getJsonObject().toJSONString();
 	}
-	
-//	@CrossOrigin
-//	@RequestMapping(value = "/getChargerStatus", produces = MediaType.APPLICATION_JSON_VALUE)
-//	@ResponseBody
-//	public String getChargerStatus() {
-//		return smartCar.getChargerJsonObject().toJSONString();
-//	}
 
 	private static final Listener rpcAgentListener = new Listener() {
 		@Override
@@ -73,5 +75,20 @@ public class SampleController {
 			System.out.printf("ExitCode: %d\n\r", exitCode);
 		}
 	};
+
+	/**
+	 * Loads config and path to logfile
+	 */
+	private static void loadConfig() {
+		// define log file name for the rpc agent (based on the package name),
+		// e.g. "rpc-within-consumerex.log";
+		String[] splitedPkgName = Main.class.getPackage().getName().split("\\.");
+		rpcLogFile = "rpc-within-" + splitedPkgName[splitedPkgName.length - 1] + ".log";
+		Gson gson = new Gson();
+		InputStream stream = Config.class.getResourceAsStream("/car-example.json");
+		String result = new BufferedReader(new InputStreamReader(stream)).lines().collect(Collectors.joining("\n"));
+		// System.out.println(result);
+		config = gson.fromJson(result, Config.class);
+	}
 
 }

@@ -15,7 +15,7 @@
 	<name>car-charger</name>
 	<url>http://maven.apache.org</url>
 	<build>
-		<!--  <defaultGoal>clean compile assembly:single</defaultGoal> -->
+		<!-- <defaultGoal>clean compile assembly:single</defaultGoal> -->
 		<defaultGoal>clean package</defaultGoal>
 		<plugins>
 			<plugin>
@@ -33,20 +33,29 @@
 					</execution>
 				</executions>
 			</plugin>
-				<plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <version>2.4</version>
-            <configuration>
-                <archive>
-                    <index>true</index>
-                    <manifest>
-                        <mainClass>org.car.charger.Main</mainClass>
-                    </manifest>
-                </archive>
-            </configuration>
-        </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<index>true</index>
+						<manifest>
+							<mainClass>org.car.charger.Main</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>charger.json</include>
+					<include>application.properties</include>
+				</includes>
+			</resource>
+		</resources>
 	</build>
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -85,6 +94,10 @@
 				<exclusion>
 					<groupId>ch.qos.logback</groupId>
 					<artifactId>logback-classic</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>log4j-over-slf4j</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
