@@ -1,32 +1,36 @@
 package com.worldpay.innovation.wpwithin.consumerex;
 
-import com.worldpay.innovation.wpwithin.PSPConfig;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.google.gson.Gson;
 import com.worldpay.innovation.wpwithin.WPWithinGeneralException;
 import com.worldpay.innovation.wpwithin.WPWithinWrapper;
 import com.worldpay.innovation.wpwithin.WPWithinWrapperImpl;
 import com.worldpay.innovation.wpwithin.rpc.launcher.Listener;
-import com.worldpay.innovation.wpwithin.types.*;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import com.worldpay.innovation.wpwithin.types.WWDevice;
+import com.worldpay.innovation.wpwithin.types.WWPaymentResponse;
+import com.worldpay.innovation.wpwithin.types.WWPrice;
+import com.worldpay.innovation.wpwithin.types.WWServiceDeliveryToken;
+import com.worldpay.innovation.wpwithin.types.WWServiceDetails;
+import com.worldpay.innovation.wpwithin.types.WWServiceMessage;
+import com.worldpay.innovation.wpwithin.types.WWTotalPriceResponse;
 
 public class Main {
 
     private static WPWithinWrapper wpw;
     private static WWDevice wpwDevice;
-
+    private static Config config;
+    private static String rpcLogFile;
     public static void main(String[] args) {
 
         System.out.println("Starting Consumer Example Written in Java.");
-
-        // define log file name for the rpc agent (based on the package name),
-        // e.g. "rpc-within-consumerex.log";
-        String[] splitedPkgName = Main.class.getPackage().getName().split("\\.");
-        String rpcLogFile = "rpc-within-" + splitedPkgName[splitedPkgName.length-1] + ".log";
-
-        wpw = new WPWithinWrapperImpl("127.0.0.1", 10001, true, rpcAgentListener, rpcLogFile);
+        loadConfig();
+        wpw = new WPWithinWrapperImpl(config.getHost(), config.getPort(), true, rpcAgentListener, rpcLogFile);
 
         try {
 
@@ -105,30 +109,21 @@ public class Main {
     }
 
     private static void connectToDevice(WWServiceMessage svcMsg) throws WPWithinGeneralException {
-
-        WWHCECard card = new WWHCECard();
-
-        card.setFirstName("Bilbo");
-        card.setLastName("Baggins");
-        card.setCardNumber("5555555555554444");
-        card.setExpMonth(11);
-        card.setExpYear(2018);
-        card.setType("Card");
-        card.setCvc("113");
-
-        Map<String, String> pspConfig = new HashMap<>();
-
-        // Worldpay Online Payments
+//		System.out.println(config.getPspConfig().get("psp_name"));
+//
+//        Map<String, String> pspConfig = new HashMap<>();
+//
+//        // Worldpay Online Payments
 //        pspConfig.put(PSPConfig.PSP_NAME, PSPConfig.WORLDPAY_ONLINE_PAYMENTS);
 //        pspConfig.put(PSPConfig.API_ENDPOINT, "https://api.worldpay.com/v1");
 
         // Worldpay Total US / SecureNet
-        pspConfig.put(PSPConfig.PSP_NAME, PSPConfig.SECURE_NET);
-        pspConfig.put(PSPConfig.API_ENDPOINT, "https://gwapi.demo.securenet.com/api");
-        pspConfig.put(PSPConfig.APP_VERSION, "0.1");
-        pspConfig.put(PSPConfig.DEVELOPER_ID, "12345678");
+//        pspConfig.put(PSPConfig.PSP_NAME, PSPConfig.SECURE_NET);
+//        pspConfig.put(PSPConfig.API_ENDPOINT, "https://gwapi.demo.securenet.com/api");
+//        pspConfig.put(PSPConfig.APP_VERSION, "0.1");
+//        pspConfig.put(PSPConfig.DEVELOPER_ID, "12345678");
 
-        wpw.initConsumer(svcMsg.getScheme(), svcMsg.getHostname(), svcMsg.getPortNumber(), svcMsg.getUrlPrefix(), wpwDevice.getUid(), card, pspConfig);
+        wpw.initConsumer(svcMsg.getScheme(), svcMsg.getHostname(), svcMsg.getPortNumber(), svcMsg.getUrlPrefix(), wpwDevice.getUid(), config.getHceCard(), config.getPspConfig());
     }
 
     private static Set<WWServiceDetails> getAvailableServices() throws WPWithinGeneralException {
@@ -257,9 +252,24 @@ public class Main {
         public void onApplicationExit(int exitCode, String stdOutput, String errOutput) {
 
             System.out.printf("RPC Agent process did exit.");
-            System.out.printf("ExitCode: %d", exitCode);
-            System.out.printf("stdout: \n%s\n", stdOutput);
-            System.out.printf("stderr: \n%s\n", errOutput);
+//            System.out.printf("ExitCode: %d", exitCode);
+//            System.out.printf("stdout: \n%s\n", stdOutput);
+//            System.out.printf("stderr: \n%s\n", errOutput);
         }
     };
+    
+    /**
+     * Loads config and path to logfile
+     */
+    private static void loadConfig() {
+        // define log file name for the rpc agent (based on the package name),
+        // e.g. "rpc-within-consumerex.log";
+        String[] splitedPkgName = Main.class.getPackage().getName().split("\\.");
+        rpcLogFile = "rpc-within-" + splitedPkgName[splitedPkgName.length-1] + ".log";
+		Gson gson = new Gson();
+		InputStream stream = Config.class.getResourceAsStream("/sample-consumer.json");
+		String result = new BufferedReader(new InputStreamReader(stream)).lines().collect(Collectors.joining("\n"));
+		// System.out.println(result);
+		config = gson.fromJson(result, Config.class);
+    }
 }
