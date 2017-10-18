@@ -234,6 +234,16 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 			throw new WPWithinGeneralException("Failed device discovery in wrapper", ex);
 		}
 	}
+	
+	@Override
+	public WWServiceMessage searchForDevice(Integer timeoutMillis, String deviceName) throws WPWithinGeneralException {
+		try {
+			return ServiceMessageAdapter.convertServiceMessage(getClient().searchForDevice(timeoutMillis, deviceName));
+		} catch (TException ex) {
+			logger.error("Failed search for device in wrapper");
+			throw new WPWithinGeneralException("Failed search for device in wrapper", ex);
+		}
+	}
 
 	@Override
 	public Set<WWServiceDetails> requestServices() throws WPWithinGeneralException {
