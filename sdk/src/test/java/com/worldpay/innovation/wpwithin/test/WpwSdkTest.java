@@ -11,8 +11,6 @@ import com.worldpay.innovation.wpwithin.WPWithinGeneralException;
 import com.worldpay.innovation.wpwithin.WPWithinWrapper;
 import com.worldpay.innovation.wpwithin.WPWithinWrapperImpl;
 
-import junit.framework.TestCase;
-
 /**
  *
  * @author worldpay
@@ -22,11 +20,18 @@ public class WpwSdkTest {
 
 	private static String HOST = "127.0.0.1";
 	private static int PORT = 9876;
+	private static String LOGFILE = "logfile";
 
 	@Test(expected = WPWithinGeneralException.class)
 	public void teExceptionTest() {
-		this.wpw = new WPWithinWrapperImpl(HOST, PORT, false, null, "adsasdasd");
+		this.wpw = new WPWithinWrapperImpl(HOST, PORT, false, null, LOGFILE);
 		wpw.stopRPCAgent();
+	}
+	
+	@Test(expected = WPWithinGeneralException.class)
+	public void searchForDeviceTest() {
+		this.wpw = new WPWithinWrapperImpl(HOST, PORT, false, null, LOGFILE);
+		wpw.searchForDevice(1000, "device");
 	}
 
 }

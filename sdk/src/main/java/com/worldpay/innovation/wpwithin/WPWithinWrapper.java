@@ -117,6 +117,13 @@ public interface WPWithinWrapper {
     public Set<WWServiceMessage> deviceDiscovery(Integer timeoutMillis) throws WPWithinGeneralException;
 
     /**
+     * @param timeoutMillis This is the timeout in milli seconds e.g. 68000
+     * @param deviceName name of the producer device to look for
+     * @return service messages that is being broadcasted by selected device
+     * @throws WPWithinGeneralException
+     */
+    public WWServiceMessage searchForDevice(Integer timeoutMillis, String deviceName) throws WPWithinGeneralException;
+    /**
      * TODO: What does this do? This requests a services that are available???
      * @return Returns the ServiceDetails object which contains all the details
      * about the service.
