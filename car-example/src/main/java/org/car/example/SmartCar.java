@@ -22,7 +22,7 @@ public class SmartCar {
 
 	private WPWithinWrapper wpw;
 	private int chargeLevel;
-	private Set<WWServiceMessage> devicesSet;
+	private WWServiceMessage chargerDevice;
 	private Set<WWServiceDetails> servicesSet;
 	private WWServiceDetails chargingService;
 	private Set<WWPrice> servicePrices;
@@ -85,18 +85,10 @@ public class SmartCar {
 		updateFlow(obj, JsonTags.FLOW, "Device discovery phase.");
 		updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
 
-		Set<WWServiceMessage> devices = wpw.deviceDiscovery(10000);
-		if (devices.size() > 0) {
-			if (devices.iterator().hasNext()) {
-				WWServiceMessage svcMsg = devices.iterator().next();
-				updateFlow(obj, JsonTags.DESCRIPTION, "Found device: " + svcMsg.getDeviceDescription());
-				this.jsonObject = obj;
-			}
-			this.devicesSet = devices;
-		} else {
-			updateFlow(obj, JsonTags.FLOW, "No services found...");
-			this.jsonObject = obj;
-		}
+		WWServiceMessage device = wpw.searchForDevice(10000, "Car charger");
+		updateFlow(obj, JsonTags.DESCRIPTION, "Found device: " + device.getDeviceDescription());
+		this.jsonObject = obj;
+		this.chargerDevice = device;
 
 	}
 
@@ -105,12 +97,10 @@ public class SmartCar {
 		updateFlow(obj, JsonTags.FLOW, "Trying to establish connection...");
 		updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
 		this.jsonObject = obj;
-		if (devicesSet != null && devicesSet.iterator().hasNext()) {
-			// Will pick the first device discovered
-			WWServiceMessage svcMsg = devicesSet.iterator().next();
-			wpw.initConsumer(svcMsg.getScheme(), svcMsg.getHostname(), svcMsg.getPortNumber(), svcMsg.getUrlPrefix(),
-					wpw.getDevice().getUid(), config.getHceCard(), config.getPspConfig());
-		}
+		// Will pick the first device discovered
+		WWServiceMessage svcMsg = chargerDevice;
+		wpw.initConsumer(svcMsg.getScheme(), svcMsg.getHostname(), svcMsg.getPortNumber(), svcMsg.getUrlPrefix(),
+				wpw.getDevice().getUid(), config.getHceCard(), config.getPspConfig());
 	}
 
 	public void getAvailableServices() throws WPWithinGeneralException {
