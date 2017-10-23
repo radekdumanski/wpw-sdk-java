@@ -4,31 +4,26 @@ The Java implementation for the Worldpay Within IoT payment SDK. This SDK, or So
 
 ![The Worldpay Within puzzle piece](http://wptechinnovation.github.io/worldpay-within-sdk/images/architecture/worldpayWithinFig1.png)
 
+## Prerequisites
+1. Install Java JDK 1.8
+2. Install Apache Maven and add it to PATH (https://maven.apache.org/)
+
 ## Get started
-1. Download this repo
-2. Add the example projects to netbeans (or go it alone creating your own project from the source code and jars - In your project, reference `WPWithin.jar` from the releases section and the other jars in lib)
-3. Run the examples...
+1. `git clone https://github.com/WPTechInnovation/wpw-sdk-java.git`
+2. `cd wpw-sdk-java`
+3. `git submodule update --init --recursive`
+4. `mvn`
 
 ## Run the examples
 * Run the consumer project
 * Simultaneously run the producer or producer-callbacks project
 * The two smart devices should communicate with each other and make a payment
 
-## Compatibility and pre-requisites
-* Assumption here is you have the Java 1.7 JRE at least
-* Java 1.7 SDK even better
-
 ## See the payments:
 1. Sign up to https://online.worldpay.com if you haven't already done so
 2. Got to settings > API keys and get your test keys
 3. Replace the keys in the consumer and producer java example source files
 4. Re-run the examples and you should see the payments coming through on the WPOP (Worldpay Online) payments dashboard
-
-## Debugging:
-* If you get some odd error messages talking about a 'rpc-agent'
-* Try typing the following command: 'ps -e | grep rpc' to get the pid(s) of rpc-agents that are running. 
-* Then do kill &lt;pid&gt; e.g. kill 13249234 to kill these processes.
-* Try re-running the examples - if this fails then please contact us at innovation@worldpay.com or on our slack channel or raise an issue in github.
   
 ## So what does it do:
 
