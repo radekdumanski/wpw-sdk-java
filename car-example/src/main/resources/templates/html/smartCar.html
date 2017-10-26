@@ -16,9 +16,9 @@
 </head>
 
 <body class="mainBgColorRed fullBodyFont">
-	<div>
+	<div style="display:none">
 		<span style="" class="chkBtn">
-			<input type="checkbox" name="admin" id="chkAdmin">Hack mode</input>
+			<input type="checkbox" name="admin" id="chkAdmin" checked="">Hack mode</input>
 		</span>
 		<span style="" class="chkBtn">
 			<input type="checkbox" name="src" id="chkSrc">Data source</input>
@@ -44,7 +44,7 @@
 			<span style="overflow:hidden;padding:0px;
 				border-radius:5px;
 				box-shadow: inset 2px 2px 3px black;
-				" id="jsonBoxBatt"
+				" id="jsonBoxBatt" class="adminMode"
 				><span id="jsonBoxBattVal"></span><span style="display:inline-block;height:100%;margin:0px;border:0px;padding:0px;width:0%;background-color:green;" id="jsonBoxBattGreen"
 				></span><span style="display:inline-block;height:100%;margin:0px;border:0px;padding:0px;width:0%;background-color:gray;" id="jsonBoxBattGray"
 				></span>
