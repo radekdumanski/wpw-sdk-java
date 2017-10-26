@@ -27,7 +27,7 @@ The Java implementation for the Worldpay Within IoT payment SDK. This SDK, or So
   
 ## So what does it do:
 
-![The Worldpay Within Flows sequence diagram](http://wptechinnovation.github.io/worldpay-within-sdk/images/architecture/serviceOverview.png)
+![The Worldpay Within Flows sequence diagram](http://wptechinnovation.github.io/worldpay-within-sdk/how-it-works/)
 
 You can see there are four phases; discover, negotiation, payment and then service delivery, for more information visit our website at http://www.worldpaywithin.com.
 
