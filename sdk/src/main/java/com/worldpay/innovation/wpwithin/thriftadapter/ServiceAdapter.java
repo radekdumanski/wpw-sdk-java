@@ -32,6 +32,7 @@ public class ServiceAdapter {
         wwService.setId(service.getId());
         wwService.setName(service.getName());
         wwService.setPrices(PriceAdapter.convertPrices(service.getPrices()));
+        wwService.setServiceType(service.getServiceType());
         return wwService;
     }
 
@@ -43,6 +44,7 @@ public class ServiceAdapter {
         service.setId(wwService.getId());
         service.setName(wwService.getName());
         service.setPrices(PriceAdapter.convertWWPrices(wwService.getPrices()));
+        service.setServiceType(wwService.getServiceType());
 
         return service;
 

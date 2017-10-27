@@ -24,6 +24,7 @@ public class WWService {
     int id;
     String name;
     String description;
+    String serviceType;
     HashMap<Integer, WWPrice> prices;
 
     public int getId() {
@@ -57,6 +58,14 @@ public class WWService {
     public void setPrices(HashMap<Integer, WWPrice> prices) {
         this.prices = prices;
     }
+
+	public String getServiceType() {
+		return serviceType;
+	}
+
+	public void setServiceType(String serviceType) {
+		this.serviceType = serviceType;
+	}
     
     
     

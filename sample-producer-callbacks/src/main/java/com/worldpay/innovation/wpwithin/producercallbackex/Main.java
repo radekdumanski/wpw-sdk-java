@@ -30,7 +30,7 @@ public class Main {
 
 			System.out.println("WorldpayWithin Sample Producer...");
 			loadConfig();
-			WPWithinWrapper wpw = new WPWithinWrapperImpl(config.getHost(), config.getPort(), true, wpWithinEventListener, 10001,
+			WPWithinWrapper wpw = new WPWithinWrapperImpl(config.getHost(), config.getPort(), true, wpWithinEventListener, 10010,
 					rpcAgentListener, rpcLogFile);
 
 			wpw.setup("Producer Example", "Example WorldpayWithin producer");

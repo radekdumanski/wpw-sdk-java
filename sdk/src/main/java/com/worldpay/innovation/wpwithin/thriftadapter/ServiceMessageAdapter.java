@@ -15,11 +15,13 @@ public class ServiceMessageAdapter {
 
         WWServiceMessage wwSvcMsg = new WWServiceMessage();
         wwSvcMsg.setDeviceDescription(svcMsg.getDeviceDescription());
+        wwSvcMsg.setDeviceName(svcMsg.getDeviceName());
         wwSvcMsg.setHostname(svcMsg.getHostname());
         wwSvcMsg.setPortNumber(svcMsg.getPortNumber());
         wwSvcMsg.setServerId(svcMsg.getServerId());
         wwSvcMsg.setUrlPrefix(svcMsg.getUrlPrefix());
         wwSvcMsg.setScheme(svcMsg.getScheme());
+        wwSvcMsg.setServiceTypes(svcMsg.getServiceTypes());
         return wwSvcMsg;
 
     }

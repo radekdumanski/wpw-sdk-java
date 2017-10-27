@@ -6,6 +6,8 @@
 
 package com.worldpay.innovation.wpwithin.types;
 
+import java.util.Set;
+
 /**
  *
  * @author worldpay
@@ -19,11 +21,14 @@ public class WWServiceMessage {
 //	5: string urlPrefix
                 
     String deviceDescription;
+    String deviceName;
     String hostname;
     int portNumber;
     String serverId;
     String urlPrefix;
     String scheme;
+    Set<String> serviceTypes;
+    
 
     public String getDeviceDescription() {
         return deviceDescription;
@@ -72,4 +77,20 @@ public class WWServiceMessage {
     public void setScheme(String scheme) {
         this.scheme = scheme;
     }
+
+	public Set<String> getServiceTypes() {
+		return serviceTypes;
+	}
+
+	public void setServiceTypes(Set<String> serviceType) {
+		this.serviceTypes = serviceType;
+	}
+
+	public String getDeviceName() {
+		return deviceName;
+	}
+
+	public void setDeviceName(String deviceName) {
+		this.deviceName = deviceName;
+	}
 }
