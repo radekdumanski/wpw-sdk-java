@@ -34,6 +34,7 @@ public class Main {
             svc.setName("Car charger");
             svc.setDescription("Can charge your hybrid / electric car");
             svc.setId(1);
+            svc.setServiceType("Charger");
 
             WWPrice ccPrice = new WWPrice();
             ccPrice.setId(1);
