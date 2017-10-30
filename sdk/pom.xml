@@ -6,6 +6,7 @@
 		<groupId>com.worldpay.innovation</groupId>
 		<artifactId>wpw-sdk-java</artifactId>
 		<version>v0.10-alpha</version>
+		<relativePath>../</relativePath>
 	</parent>
 	<groupId>com.worldpay.innovation.wpw-sdk-java</groupId>
 	<artifactId>sdk</artifactId>
