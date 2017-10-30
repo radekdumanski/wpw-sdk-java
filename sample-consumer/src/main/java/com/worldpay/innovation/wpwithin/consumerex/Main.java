@@ -96,7 +96,9 @@ public class Main {
                 System.out.printf("URL Prefix: %s\n", svcMsg.getUrlPrefix());
                 System.out.printf("ServerId: %s\n", svcMsg.getServerId());
                 System.out.printf("Scheme: %s\n", svcMsg.getScheme());
-
+                for (String s: svcMsg.getServiceTypes()) {
+                	System.out.printf("ServiceTypes: %s\n", s);
+                }
                 System.out.println("--------");
             }
 
