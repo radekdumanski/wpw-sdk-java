@@ -42,7 +42,7 @@ public class Charger {
 			updateFlow(chargerObj, JsonTags.FLOW, "Car charger example...");
 			chargerJsonObject = chargerObj;
 			loadConfig();
-			wpw = new WPWithinWrapperImpl(config.getHost(), config.getPort(), true, wpWithinEventListener, 10003, rpcAgentListener,
+			wpw = new WPWithinWrapperImpl(config.getHost(), config.getPort(), true, wpWithinEventListener, config.getCallbackPort(), rpcAgentListener,
 					rpcLogFile);
 			wpw.setup("Car charger", "Car charger device.");
 
