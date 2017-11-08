@@ -1,5 +1,7 @@
 function refreshChargerStatus() {
-	processJSON("http://localhost/getChargerStatus");
+	//processJSON("http://localhost/getChargerStatus");
+	var uri = document.URL.match(/(^https?:\/\/[^/]+)/)[0] + "/getChargerStatus";
+	processJSON(uri);
 }
 
 function processJSON(jsonPath){
