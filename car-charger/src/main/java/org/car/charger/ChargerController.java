@@ -17,6 +17,11 @@ public class ChargerController {
 		this.charger.run();
 	}
 
+	@RequestMapping("/")
+	public String getProducerPage() {
+		return "html/index";
+	}
+	
 	@CrossOrigin
 	@RequestMapping(value = "/getChargerStatus", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
