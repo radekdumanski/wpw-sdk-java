@@ -6,6 +6,7 @@ import com.worldpay.innovation.wpwithin.types.WWHCECard;
 
 public class Config {
 	private int port;
+	private int callbackPort;
 	private String host;
 	private Map<String, String> pspConfig;
 
@@ -23,6 +24,14 @@ public class Config {
 
 	public void setHost(String host) {
 		this.host = host;
+	}
+
+	public int getCallbackPort() {
+		return callbackPort;
+	}
+
+	public void setCallbackPort(int callbackPort) {
+		this.callbackPort = callbackPort;
 	}
 
 	public Map<String, String> getPspConfig() {
