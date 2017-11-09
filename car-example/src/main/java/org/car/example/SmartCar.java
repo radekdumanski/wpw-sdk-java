@@ -81,15 +81,16 @@ public class SmartCar {
 
 	public void discoverDevices() {
 		JSONObject obj = new JSONObject();
-
+		String producerName = "Car charger";
 		updateFlow(obj, JsonTags.FLOW, "Device discovery phase.");
 		updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));
-
-		WWServiceMessage device = wpw.searchForDevice(10000, "Car charger");
+		WWServiceMessage device = wpw.searchForDevice(10000, producerName);
+		if(device.getDeviceName().isEmpty()) {
+			throw new WPWithinGeneralException(producerName + " producer device was not found.");
+		}
 		updateFlow(obj, JsonTags.DESCRIPTION, "Found device: " + device.getDeviceDescription());
 		this.jsonObject = obj;
 		this.chargerDevice = device;
-
 	}
 
 	public void connectToDevice() throws WPWithinGeneralException {
