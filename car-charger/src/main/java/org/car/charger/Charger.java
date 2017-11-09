@@ -36,9 +36,9 @@ public class Charger {
 	}
 
 	public void run() throws Exception {
-
-		try {
 			JSONObject chargerObj = new JSONObject();
+		try {
+			
 			updateFlow(chargerObj, JsonTags.FLOW, "Car charger example...");
 			chargerJsonObject = chargerObj;
 			loadConfig();
@@ -59,7 +59,7 @@ public class Charger {
 			wpw.startServiceBroadcast(0);
 
 		} catch (WPWithinGeneralException e) {
-
+			updateFlow(chargerObj, JsonTags.FLOW, e.getMessage());
 			e.printStackTrace();
 		}
 	}
