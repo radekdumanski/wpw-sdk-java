@@ -112,7 +112,7 @@ document.getElementById('jsonBoxBatt').onclick=function(e){
 	//console.log('offsetX',e.offsetX);
 	//console.log('offsetWidth',e.target.offsetWidth);
 	//console.log('clientWidth',e.target.clientWidth);
-	var uri = 'http://127.0.0.1:8000/setCharge?data='+val;
+	var uri = document.URL.match(/(^https?:\/\/[^/]+)/)[0] + "/setCharge?data="+val;
 	$.ajax({url: uri})
 	.done(function(data){
 		//console.log("Charge set to "+e.offsetX);
