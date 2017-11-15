@@ -3,11 +3,15 @@ package org.car.charger;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import org.json.simple.JSONObject;
 
 import com.google.gson.Gson;
+import com.sun.jna.ptr.IntByReference;
+import com.sun.jna.ptr.LongByReference;
+import com.worldpay.innovation.wpwithin.PSPConfig;
 import com.worldpay.innovation.wpwithin.WPWithinGeneralException;
 import com.worldpay.innovation.wpwithin.WPWithinWrapper;
 import com.worldpay.innovation.wpwithin.WPWithinWrapperImpl;
@@ -53,7 +57,32 @@ public class Charger {
 			ChargingServices chargingServices = new ChargingServices();
 			svc.setPrices(chargingServices.getServicesMap());
 			wpw.addService(svc);
-			wpw.initProducer(config.getPspConfig());
+			///
+			SGXWrapper sgx = SGXWrapper.INSTANCE;
+			LongByReference eid = new LongByReference();
+			IntByReference updated = new IntByReference();
+			LongByReference[] token = new LongByReference[1024];
+			long tmp = sgx.en_create_enclave(token, eid, updated);
+			String htePublicKey = null, htePrivateKey = null, merchantClientKey = null, merchantServiceKey = null;
+			if(tmp == 0) {
+				System.out.println("Enclave initialized.");
+				int len = 100;
+				byte[] byteArray = new byte[len];
+				sgx.en_get_hte_public_key(eid.getValue(), byteArray, len);
+				htePublicKey = new String(byteArray).trim();
+				sgx.en_get_hte_private_key(eid.getValue(), byteArray, len);
+				htePrivateKey = new String(byteArray).trim();
+				sgx.en_get_merchant_client_key(eid.getValue(), byteArray, len);
+				merchantClientKey = new String(byteArray).trim();
+				sgx.en_get_merchant_service_key(eid.getValue(), byteArray, len);
+				merchantServiceKey = new String(byteArray).trim();
+				long desTmp = sgx.en_destroy_enclave(eid.getValue());
+				if(desTmp ==0) {
+					System.out.println("Enclave closed.");
+				}
+			}
+			HashMap<String, String> pspConfig = PSPConfig.getPspConfig(htePublicKey, htePrivateKey, merchantClientKey, merchantServiceKey);
+			wpw.initProducer(pspConfig);
 			updateFlow(chargerObj, JsonTags.FLOW, "Broadcasting...");
 			chargerJsonObject = chargerObj;
 			wpw.startServiceBroadcast(0);
