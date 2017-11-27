@@ -34,7 +34,7 @@ public interface WPWithinWrapper {
      * @param description The description of the device
      * @throws WPWithinGeneralException
      */
-    public void setup(String name, String description) throws WPWithinGeneralException;
+    public void setup(String name, String description, String interfaceAddr) throws WPWithinGeneralException;
 
     /**
      * Adds a service of type WWSerive to the producer, used if the device you

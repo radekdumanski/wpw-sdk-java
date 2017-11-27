@@ -17,7 +17,7 @@ public class CarController extends Thread {
 	@Override
 	public void run() {
 		try {
-			smartCar.setup("smart-car", "Smart car example.");
+			smartCar.setup("smart-car", "Smart car example.", null);
 			// flow ~plugin
 			Thread.sleep(1000);
 			smartCar.discoverDevices();
