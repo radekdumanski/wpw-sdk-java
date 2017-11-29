@@ -44,7 +44,7 @@ public class Charger {
 			loadConfig();
 			wpw = new WPWithinWrapperImpl(config.getHost(), config.getPort(), true, wpWithinEventListener, config.getCallbackPort(), rpcAgentListener,
 					rpcLogFile);
-			wpw.setup("Car charger", "Car charger device.");
+			wpw.setup(config.getDeviceName(), "Car charger device.", config.getInterfaceAddr());
 
 			WWService svc = new WWService();
 			svc.setName("Car charger");

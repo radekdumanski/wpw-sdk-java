@@ -71,8 +71,8 @@ public class SmartCar {
 		this.chargeLevel = chargeLevel;
 	}
 
-	public void setup(String name, String description) {
-		wpw.setup(name, description);
+	public void setup(String name, String description, String interfaceAddr) {
+		wpw.setup(name, description, interfaceAddr);
 		JSONObject obj = new JSONObject();
 		updateFlow(obj, JsonTags.FLOW, "Charger plugged in.");
 		updateFlow(obj, JsonTags.BATTERY, String.valueOf(chargeLevel));

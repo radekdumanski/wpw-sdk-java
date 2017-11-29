@@ -34,7 +34,7 @@ public class Main {
 
         try {
 
-            wpw.setup("my-device", "an example consumer device");
+            wpw.setup("my-device", "an example consumer device", null);
             wpwDevice = wpw.getDevice();
 
             Set<WWServiceMessage> devices = discoverDevices();
