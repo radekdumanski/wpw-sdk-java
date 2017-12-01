@@ -70,7 +70,7 @@
 		<dependency>
 			<groupId>com.worldpay.innovation.wpw-sdk-java</groupId>
 			<artifactId>sdk</artifactId>
-			<version>v0.10-alpha</version>
+			<version>v0.11-alpha</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
