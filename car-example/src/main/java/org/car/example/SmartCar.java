@@ -56,6 +56,9 @@ public class SmartCar {
 		this.jsonObject = new JSONObject(); // Simple JSONObject is causing type safety warnings
 		updateFlow(JsonTags.FLOW, "Smart Car Web service.");
 		updateFlow(JsonTags.BATTERY, String.valueOf(chargeLevel));
+		updateFlow(JsonTags.DESCRIPTION, "standby");
+		updateFlow(JsonTags.PRICE, null);
+		updateFlow(JsonTags.UNITS, null);
 	}
 
 	public JSONObject getJsonObject() {
@@ -80,19 +83,25 @@ public class SmartCar {
 		wpw.setup(name, description, interfaceAddr);
 		updateFlow(JsonTags.FLOW, "Charger plugged in.");
 		updateFlow(JsonTags.BATTERY, String.valueOf(chargeLevel));
+		updateFlow(JsonTags.DESCRIPTION, "Plugging-in");
+		updateFlow(JsonTags.PRICE, null);
+		updateFlow(JsonTags.UNITS, null);
 	}
 
 	public void discoverDevices() {
 		String producerName = "Car charger";
 		updateFlow(JsonTags.FLOW, "Device discovery phase.");
 		updateFlow(JsonTags.BATTERY, String.valueOf(chargeLevel));
+		updateFlow(JsonTags.DESCRIPTION, "Searching for devices");
+		updateFlow(JsonTags.PRICE, null);
+		updateFlow(JsonTags.UNITS, null);
 
 		TimeZone tz = TimeZone.getTimeZone("UTC");
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		df.setTimeZone(tz);
 		updateFlow(JsonTags.LAST_SEARCH_TIMESTAMP, df.format(new Date()));
 
-		WWServiceMessage device = wpw.searchForDevice(10000, producerName);
+		WWServiceMessage device = wpw.searchForDevice(2000, producerName);
 		if (device.getDeviceName().isEmpty()) {
 			throw new WPWithinGeneralException(producerName + " producer device was not found.");
 		}
@@ -103,6 +112,9 @@ public class SmartCar {
 	public void connectToDevice() throws WPWithinGeneralException {
 		updateFlow(JsonTags.FLOW, "Trying to establish connection...");
 		updateFlow(JsonTags.BATTERY, String.valueOf(chargeLevel));
+		updateFlow(JsonTags.DESCRIPTION, "Connecting...");
+		updateFlow(JsonTags.PRICE, null);
+		updateFlow(JsonTags.UNITS, null);
 		// Will pick the first device discovered
 		WWServiceMessage svcMsg = chargerDevice;
 		wpw.initConsumer(svcMsg.getScheme(), svcMsg.getHostname(), svcMsg.getPortNumber(), svcMsg.getUrlPrefix(),
@@ -112,6 +124,9 @@ public class SmartCar {
 	public void getAvailableServices() throws WPWithinGeneralException {
 		updateFlow(JsonTags.FLOW, "Service query phase.");
 		updateFlow(JsonTags.BATTERY, String.valueOf(chargeLevel));
+		updateFlow(JsonTags.DESCRIPTION, "Querying services...");
+		updateFlow(JsonTags.PRICE, null);
+		updateFlow(JsonTags.UNITS, null);
 		this.servicesSet = wpw.requestServices();
 		if (servicesSet != null && servicesSet.size() > 0) {
 			Iterator<WWServiceDetails> svcIterator = servicesSet.iterator();
@@ -128,8 +143,11 @@ public class SmartCar {
 		ChargingOptions chargeOption = null;
 		updateFlow(JsonTags.FLOW, "Found " + servicePrices.size() + " charging options for selected service");
 		updateFlow(JsonTags.BATTERY, String.valueOf(chargeLevel));
+		updateFlow(JsonTags.DESCRIPTION, "Selecting service...");
+		updateFlow(JsonTags.PRICE, null);
+		updateFlow(JsonTags.UNITS, null);
 		try {
-			Thread.sleep(7000);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -163,6 +181,7 @@ public class SmartCar {
 			updateFlow(JsonTags.BATTERY, String.valueOf(chargeLevel));
 			updateFlow(JsonTags.UNITS, "Units to supply: " + tpr.getUnitsToSupply());
 			updateFlow(JsonTags.PRICE, "Total price: " + ((float) tpr.getTotalPrice() / 100) + tpr.getCurrencyCode());
+			updateFlow(JsonTags.DESCRIPTION, "Order summary...");
 
 			this.totalPriceResponse = tpr;
 			this.priceCurrency = tpr.getCurrencyCode();
@@ -179,6 +198,7 @@ public class SmartCar {
 			updateFlow(JsonTags.FLOW, "Payment phase.");
 			updateFlow(JsonTags.BATTERY, String.valueOf(chargeLevel));
 			updateFlow(JsonTags.PRICE, "Total paid: " + ((float) pResp.getTotalPaid() / 100) + priceCurrency);
+			updateFlow(JsonTags.DESCRIPTION, "Purchasing...");
 
 			this.paymentResponse = pResp;
 		} else {
@@ -191,6 +211,9 @@ public class SmartCar {
 		wpw.beginServiceDelivery(serviceID, token, unitsToSupply);
 		try {
 			updateFlow(JsonTags.FLOW, "Charging the car...");
+			updateFlow(JsonTags.DESCRIPTION, "Charging...");
+			updateFlow(JsonTags.PRICE, null);
+			updateFlow(JsonTags.UNITS, null);
 
 			for (int i = 0; i <= unitsToSupply; i = i + 1) {
 				updateFlow(JsonTags.BATTERY, String.valueOf(chargeLevel + i));
@@ -212,6 +235,9 @@ public class SmartCar {
 	private void stopService(WWServiceDeliveryToken token) throws WPWithinGeneralException, InterruptedException {
 		updateFlow(JsonTags.FLOW, "Car charged, waiting for input...");
 		updateFlow(JsonTags.BATTERY, "100");
+		updateFlow(JsonTags.DESCRIPTION, "standby");
+		updateFlow(JsonTags.PRICE, null);
+		updateFlow(JsonTags.UNITS, null);
 		wpw.endServiceDelivery(serviceID, token, unitsToSupply);
 	}
 
@@ -230,5 +256,8 @@ public class SmartCar {
 
 	void SetJsonException(String msg) {
 		updateFlow(JsonTags.FLOW, msg);
+		updateFlow(JsonTags.DESCRIPTION, "Error");
+		updateFlow(JsonTags.PRICE, null);
+		updateFlow(JsonTags.UNITS, null);
 	}
 }
