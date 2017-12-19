@@ -5,12 +5,12 @@
 	<parent>
 		<groupId>com.worldpay.innovation</groupId>
 		<artifactId>wpw-sdk-java</artifactId>
-		<version>v0.10-alpha</version>
+		<version>v0.11-alpha</version>
 		<relativePath>../</relativePath>
 	</parent>
 	<groupId>com.worldpay.innovation.wpw-sdk-java</groupId>
 	<artifactId>sdk</artifactId>
-	<version>v0.10-alpha</version>
+	<version>v0.11-alpha</version>
 
 	<name>sdk</name>
 	<url>http://maven.apache.org</url>

@@ -33,5 +33,10 @@ public class WpwSdkTest {
 		this.wpw = new WPWithinWrapperImpl(HOST, PORT, false, null, LOGFILE);
 		wpw.searchForDevice(1000, "device");
 	}
-
+	
+	@Test(expected = WPWithinGeneralException.class)
+	public void setup() {
+		this.wpw = new WPWithinWrapperImpl(HOST, PORT, false, null, LOGFILE);
+		wpw.setup("my", "device", null);
+	}
 }

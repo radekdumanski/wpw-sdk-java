@@ -140,9 +140,9 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 	}
 
 	@Override
-	public void setup(String name, String description) throws WPWithinGeneralException {
+	public void setup(String name, String description, String interfaceAddr) throws WPWithinGeneralException {
 		try {
-			getClient().setup(name, description);
+			getClient().setup(name, description, interfaceAddr);
 		} catch (TException ex) {
 			logger.error("Failure to setup in the wrapper", ex);
 			throw new WPWithinGeneralException("Failure to setup in the wrapper", ex);

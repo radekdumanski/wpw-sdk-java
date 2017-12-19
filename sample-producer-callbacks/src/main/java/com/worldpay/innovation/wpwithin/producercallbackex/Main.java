@@ -33,8 +33,7 @@ public class Main {
 			WPWithinWrapper wpw = new WPWithinWrapperImpl(config.getHost(), config.getPort(), true, wpWithinEventListener, config.getCallbackPort(),
 					rpcAgentListener, rpcLogFile);
 
-			wpw.setup("Producer Example", "Example WorldpayWithin producer");
-
+			wpw.setup(config.getDeviceName(), "Example WorldpayWithin producer", config.getInterfaceAddr());
 			WWService svc = new WWService();
 			svc.setName("Car charger");
 			svc.setDescription("Can charge your hybrid / electric car");

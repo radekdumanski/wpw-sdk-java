@@ -32,9 +32,10 @@ public interface WPWithinWrapper {
      *
      * @param name The name of the device
      * @param description The description of the device
+     * @param interfaceAddr ip address of the interface that will be used for broadcast
      * @throws WPWithinGeneralException
      */
-    public void setup(String name, String description) throws WPWithinGeneralException;
+    public void setup(String name, String description, String interfaceAddr) throws WPWithinGeneralException;
 
     /**
      * Adds a service of type WWSerive to the producer, used if the device you
