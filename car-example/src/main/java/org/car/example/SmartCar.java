@@ -193,7 +193,6 @@ public class SmartCar {
 	public void purchaseService() throws WPWithinGeneralException {
 
 		WWPaymentResponse pResp = wpw.makePayment(this.totalPriceResponse);
-
 		if (pResp != null) {
 			updateFlow(JsonTags.FLOW, "Payment phase.");
 			updateFlow(JsonTags.BATTERY, String.valueOf(chargeLevel));

@@ -154,6 +154,7 @@ public class Charger {
 			TimeZone tz = TimeZone.getTimeZone("UTC");
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 			df.setTimeZone(tz);
+			
 			updateFlow(JsonTags.LAST_DISCOVERY_TIMESTAMP, df.format(new Date()));
 		}
 
