@@ -120,8 +120,6 @@ public class Charger {
 			HashMap<String, String> pspConfig = PSPConfig.getPspConfig(htePublicKey, htePrivateKey, merchantClientKey, merchantServiceKey);
 			wpw.initProducer(pspConfig);
 			updateFlow(JsonTags.FLOW, "Broadcasting...");
-			wpw.initProducer(config.getPspConfig());
-			updateFlow(JsonTags.FLOW, "Broadcasting...");
 			this.broadcasting = true;
 			wpw.startServiceBroadcast(0);
 			updateFlow(JsonTags.BROADCAST_STATUS, "broadcasting");
