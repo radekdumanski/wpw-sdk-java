@@ -29,12 +29,17 @@ public class Charger {
 	private JSONObject chargerJsonObject;
 	private boolean broadcasting;
 
-	public void setChargerJsonObject(JSONObject chargerJsonObject) {
-		this.chargerJsonObject = chargerJsonObject;
+	/**
+	 * Initializes JSONObject as we keep charger's state information there This
+	 * should be moved to some specific object props in the future to get code a bit
+	 * cleaner
+	 */
+	public Charger() {
+		this.chargerJsonObject = new JSONObject();
 	}
 
-	private void updateFlow(JSONObject obj, JsonTags tag, String msg) {
-		obj.put(tag.getTag(), msg);
+	private void updateFlow(JsonTags tag, String msg) {
+		chargerJsonObject.put(tag.getTag(), msg);
 	}
 
 	public JSONObject getChargerJsonObject() {
@@ -45,34 +50,38 @@ public class Charger {
 		return this.chargerJsonObject;
 	}
 
-	public String startBroadcasting(){ // sync?
-		if(this.broadcasting == true){
+	public String startBroadcasting() { // sync?
+		if (this.broadcasting == true) {
 			return "{\"status\":\"already started?\"}"; // exception ?
 		}
 		this.broadcasting = true;
 		wpw.startServiceBroadcast(0);
-		updateFlow(this.chargerJsonObject, JsonTags.BROADCAST_STATUS, "broadcasting");
+		updateFlow(JsonTags.BROADCAST_STATUS, "broadcasting");
+		updateFlow(JsonTags.FLOW, "Broadcasting...");
 		return "{\"status\":\"started\"}";
 	}
-	public String stopBroadcasting(){ // sync?
-		if(this.broadcasting == false){
+
+	public String stopBroadcasting() { // sync?
+		if (this.broadcasting == false) {
 			return "{\"status\":\"already stopped?\"}"; // exception ?
 		}
 		this.broadcasting = false;
 		wpw.stopServiceBroadcast();
-		updateFlow(this.chargerJsonObject, JsonTags.BROADCAST_STATUS, "off");
+		updateFlow(JsonTags.BROADCAST_STATUS, "off");
+		updateFlow(JsonTags.FLOW, "standby");
 		return "{\"status\":\"stopped\"}";
 	}
 
 	public void run() throws Exception {
-			JSONObject chargerObj = new JSONObject();
 		try {
-			
-			updateFlow(chargerObj, JsonTags.FLOW, "Car charger example...");
-			chargerJsonObject = chargerObj;
+
+			// Begin
+			updateFlow(JsonTags.FLOW, "Car charger example...");
+
+			// Load config, init WPW and start broadcasting
 			loadConfig();
-			wpw = new WPWithinWrapperImpl(config.getHost(), config.getPort(), true, wpWithinEventListener, config.getCallbackPort(), rpcAgentListener,
-					rpcLogFile);
+			wpw = new WPWithinWrapperImpl(config.getHost(), config.getPort(), true, wpWithinEventListener,
+					config.getCallbackPort(), rpcAgentListener, rpcLogFile);
 			wpw.setup(config.getDeviceName(), "Car charger device.", config.getInterfaceAddr());
 
 			WWService svc = new WWService();
@@ -83,13 +92,12 @@ public class Charger {
 			svc.setPrices(chargingServices.getServicesMap());
 			wpw.addService(svc);
 			wpw.initProducer(config.getPspConfig());
-			updateFlow(chargerObj, JsonTags.FLOW, "Broadcasting...");
-			chargerJsonObject = chargerObj;
+			updateFlow(JsonTags.FLOW, "Broadcasting...");
 			this.broadcasting = true;
 			wpw.startServiceBroadcast(0);
-			updateFlow(chargerObj, JsonTags.BROADCAST_STATUS, "broadcasting");
+			updateFlow(JsonTags.BROADCAST_STATUS, "broadcasting");
 		} catch (WPWithinGeneralException e) {
-			updateFlow(chargerObj, JsonTags.FLOW, e.getMessage());
+			updateFlow(JsonTags.FLOW, e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -99,109 +107,84 @@ public class Charger {
 		@Override
 		public void onBeginServiceDelivery(int serviceID, int servicePriceID,
 				WWServiceDeliveryToken wwServiceDeliveryToken, int unitsToSupply) throws WPWithinGeneralException {
-			//JSONObject chargerObj = new JSONObject();
-			JSONObject chargerObj = getChargerJsonObject();
-			updateFlow(chargerObj, JsonTags.FLOW,
+			updateFlow(JsonTags.FLOW,
 					"Service delivery phase: " + wpw.getDevice().getServices().get(serviceID).getName());
-			updateFlow(chargerObj, JsonTags.DESCRIPTION, "Option to provide: "
+			updateFlow(JsonTags.DESCRIPTION, "Option to provide: "
 					+ wpw.getDevice().getServices().get(serviceID).getPrices().get(servicePriceID).getDescription());
-			updateFlow(chargerObj, JsonTags.UNITS, "UnitsToSupply: " + unitsToSupply);
-			updateFlow(chargerObj, JsonTags.SERVICE_STATUS, "delivering");
-			setChargerJsonObject(chargerObj);
+			updateFlow(JsonTags.UNITS, "UnitsToSupply: " + unitsToSupply);
+			updateFlow(JsonTags.SERVICE_STATUS, "delivering");
 		}
 
 		@Override
 		public void onEndServiceDelivery(int serviceID, WWServiceDeliveryToken wwServiceDeliveryToken,
 				int unitsReceived) throws WPWithinGeneralException {
 
-			//JSONObject chargerObj = new JSONObject();
-			JSONObject chargerObj = getChargerJsonObject();
-			updateFlow(chargerObj, JsonTags.FLOW, "Broadcasting...");
-			updateFlow(chargerObj, JsonTags.SERVICE_STATUS, "standby");
-			updateFlow(chargerObj, JsonTags.DESCRIPTION, "");
-			updateFlow(chargerObj, JsonTags.UNITS, "");
-			chargerJsonObject = chargerObj;
+			updateFlow(JsonTags.FLOW, "Broadcasting...");
+			updateFlow(JsonTags.SERVICE_STATUS, "standby");
+			updateFlow(JsonTags.DESCRIPTION, "");
+			updateFlow(JsonTags.UNITS, "");
 		}
 
 		@Override
 		public void onMakePaymentEvent(int totalPrice, String orderCurrency, String clientToken,
 				String orderDescription, String uuid) throws WPWithinGeneralException {
 
-			//JSONObject chargerObj = new JSONObject();
-			JSONObject chargerObj = getChargerJsonObject();
-			updateFlow(chargerObj, JsonTags.FLOW, "Making payment...");
-			updateFlow(chargerObj, JsonTags.DESCRIPTION, "Order description: " + orderDescription);
-			updateFlow(chargerObj, JsonTags.UNITS, "Total price: " + ((float) totalPrice) / 100 + orderCurrency);
-			
+			updateFlow(JsonTags.FLOW, "Making payment...");
+			updateFlow(JsonTags.DESCRIPTION, "Order description: " + orderDescription);
+			updateFlow(JsonTags.UNITS, "Total price: " + ((float) totalPrice) / 100 + orderCurrency);
+
 			TimeZone tz = TimeZone.getTimeZone("UTC");
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 			df.setTimeZone(tz);
-			updateFlow(chargerObj, JsonTags.LAST_PAYMENT_RECEIVED_TIMESTAMP, df.format(new Date()));
-			
-			setChargerJsonObject(chargerObj);
+			updateFlow(JsonTags.LAST_PAYMENT_RECEIVED_TIMESTAMP, df.format(new Date()));
 		}
 
 		@Override
 		public void onErrorEvent(String msg) throws WPWithinGeneralException {
 
-			//JSONObject chargerObj = new JSONObject();
-			JSONObject chargerObj = getChargerJsonObject();
-			updateFlow(chargerObj, JsonTags.FLOW, "Error occurred: " + msg);
-			setChargerJsonObject(chargerObj);
-
+			updateFlow(JsonTags.FLOW, "Error occurred: " + msg);
 		}
 
 		@Override
 		public void onServiceDiscoveryEvent(String remoteAddr) throws WPWithinGeneralException {
-			//JSONObject chargerObj = new JSONObject();
-			JSONObject chargerObj = getChargerJsonObject();
-			updateFlow(chargerObj, JsonTags.FLOW, "Service query phase...");
-			updateFlow(chargerObj, JsonTags.DESCRIPTION, "Connected client: " + remoteAddr);
-			updateFlow(chargerObj, JsonTags.UNITS, "");
+			updateFlow(JsonTags.FLOW, "Service query phase...");
+			updateFlow(JsonTags.DESCRIPTION, "Connected client: " + remoteAddr);
+			updateFlow(JsonTags.UNITS, "");
 
 			TimeZone tz = TimeZone.getTimeZone("UTC");
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 			df.setTimeZone(tz);
-			updateFlow(chargerObj, JsonTags.LAST_DISCOVERY_TIMESTAMP, df.format(new Date()));
 			
-			setChargerJsonObject(chargerObj);
+			updateFlow(JsonTags.LAST_DISCOVERY_TIMESTAMP, df.format(new Date()));
 		}
 
 		@Override
 		public void onServicePricesEvent(String remoteAddr, int serviceId) throws WPWithinGeneralException {
 
-			//JSONObject chargerObj = new JSONObject();
-			JSONObject chargerObj = getChargerJsonObject();
-			updateFlow(chargerObj, JsonTags.FLOW, "Service negotiation...1/2");
-			updateFlow(chargerObj, JsonTags.DESCRIPTION,
+			updateFlow(JsonTags.FLOW, "Service negotiation...1/2");
+			updateFlow(JsonTags.DESCRIPTION,
 					"Service selected: " + wpw.getDevice().getServices().get(serviceId).getName());
-			updateFlow(chargerObj, JsonTags.UNITS, "");
-			
+			updateFlow(JsonTags.UNITS, "");
+
 			TimeZone tz = TimeZone.getTimeZone("UTC");
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 			df.setTimeZone(tz);
-			updateFlow(chargerObj, JsonTags.LAST_SERVICE_PRICES_TIMESTAMP, df.format(new Date()));
-			
-			setChargerJsonObject(chargerObj);
+			updateFlow(JsonTags.LAST_SERVICE_PRICES_TIMESTAMP, df.format(new Date()));
 		}
 
 		@Override
 		public void onServiceTotalPriceEvent(String remoteAddr, int serviceId, WWTotalPriceResponse totalPriceResponse)
 				throws WPWithinGeneralException {
 
-			//JSONObject chargerObj = new JSONObject();
-			JSONObject chargerObj = getChargerJsonObject();
-			updateFlow(chargerObj, JsonTags.FLOW, "Service negotiation...2/2");
-			updateFlow(chargerObj, JsonTags.DESCRIPTION, "Option selected: " + wpw.getDevice().getServices()
-					.get(serviceId).getPrices().get(totalPriceResponse.getPriceId()).getDescription());
-			updateFlow(chargerObj, JsonTags.UNITS, "");
-			
+			updateFlow(JsonTags.FLOW, "Service negotiation...2/2");
+			updateFlow(JsonTags.DESCRIPTION, "Option selected: " + wpw.getDevice().getServices().get(serviceId)
+					.getPrices().get(totalPriceResponse.getPriceId()).getDescription());
+			updateFlow(JsonTags.UNITS, "");
+
 			TimeZone tz = TimeZone.getTimeZone("UTC");
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 			df.setTimeZone(tz);
-			updateFlow(chargerObj, JsonTags.LAST_SERVICE_TOTAL_PRICE_TIMESTAMP, df.format(new Date()));
-			
-			setChargerJsonObject(chargerObj);
+			updateFlow(JsonTags.LAST_SERVICE_TOTAL_PRICE_TIMESTAMP, df.format(new Date()));
 		}
 	};
 
