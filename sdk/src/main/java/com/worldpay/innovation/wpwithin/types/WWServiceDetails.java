@@ -12,27 +12,44 @@ package com.worldpay.innovation.wpwithin.types;
  */
 public class WWServiceDetails {
 
-//    	1: i32 serviceId
-//	2: string serviceDescription
-                
-    int serviceId;
-    String serviceDescription;
+	// 1: i32 serviceId
+	// 2: string serviceDescription
 
-    public int getServiceId() {
-        return serviceId;
-    }
+	int serviceId;
+	String serviceDescription;
+	String serviceName;
+	String serviceType;
 
-    public void setServiceId(int serviceId) {
-        this.serviceId = serviceId;
-    }
+	public int getServiceId() {
+		return serviceId;
+	}
 
-    public String getServiceDescription() {
-        return serviceDescription;
-    }
+	public void setServiceId(int serviceId) {
+		this.serviceId = serviceId;
+	}
 
-    public void setServiceDescription(String serviceDescription) {
-        this.serviceDescription = serviceDescription;
-    }
-    
-    
+	public String getServiceDescription() {
+		return serviceDescription;
+	}
+
+	public void setServiceDescription(String serviceDescription) {
+		this.serviceDescription = serviceDescription;
+	}
+
+	public String getServiceName() {
+		return serviceName;
+	}
+
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
+	}
+
+	public String getServiceType() {
+		return serviceType;
+	}
+
+	public void setServiceType(String serviceType) {
+		this.serviceType = serviceType;
+	}
+
 }

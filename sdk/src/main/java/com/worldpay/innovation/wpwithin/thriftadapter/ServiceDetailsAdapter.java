@@ -23,8 +23,10 @@ public class ServiceDetailsAdapter {
             for (ServiceDetails svcDetail : svcDetails) {
 
                 WWServiceDetails wwSvcDetail = new WWServiceDetails();
-                wwSvcDetail.setServiceDescription(svcDetail.getServiceDescription());
                 wwSvcDetail.setServiceId(svcDetail.getServiceId());
+                wwSvcDetail.setServiceName(svcDetail.getServiceName());
+                wwSvcDetail.setServiceDescription(svcDetail.getServiceDescription());
+                wwSvcDetail.setServiceType(svcDetail.getServiceType());
                 wwSvcDetails.add(wwSvcDetail);
             }
         } else {
