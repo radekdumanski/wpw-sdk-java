@@ -100,7 +100,7 @@ public class Charger {
 			LongByReference[] token = new LongByReference[1024];
 			long tmp = sgx.en_create_enclave(token, eid, updated);
 			String htePublicKey = null, htePrivateKey = null, merchantClientKey = null, merchantServiceKey = null;
-			if(tmp == 0) {
+			if (tmp == 0) {
 				System.out.println("Enclave initialized.");
 				int len = 100;
 				byte[] byteArray = new byte[len];
@@ -113,11 +113,13 @@ public class Charger {
 				sgx.en_get_merchant_service_key(eid.getValue(), byteArray, len);
 				merchantServiceKey = new String(byteArray).trim();
 				long desTmp = sgx.en_destroy_enclave(eid.getValue());
-				if(desTmp ==0) {
+				if (desTmp == 0) {
 					System.out.println("Enclave closed.");
 				}
 			}
-			HashMap<String, String> pspConfig = PSPConfig.getPspConfig(htePublicKey, htePrivateKey, merchantClientKey, merchantServiceKey);
+			HashMap<String, String> pspConfig = PSPConfig.getPspConfig(config.getPspConfig().get("psp_name"),
+					config.getPspConfig().get("api_endpoint"), htePublicKey, htePrivateKey, merchantClientKey,
+					merchantServiceKey);
 			wpw.initProducer(pspConfig);
 			updateFlow(JsonTags.FLOW, "Broadcasting...");
 			this.broadcasting = true;
@@ -181,7 +183,7 @@ public class Charger {
 			TimeZone tz = TimeZone.getTimeZone("UTC");
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 			df.setTimeZone(tz);
-			
+
 			updateFlow(JsonTags.LAST_DISCOVERY_TIMESTAMP, df.format(new Date()));
 		}
 
