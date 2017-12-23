@@ -1,0 +1,73 @@
+div.outerFrame {
+	border:1px solid #385d8a;
+	position:absolute;
+	left:0;
+	right:0;
+	top:0;
+	bottom:0;
+	//background:url("/images/re-scaled-car-ui.png")
+}
+#battery {
+	position:absolute;
+	left:25vw;
+	right:11vw;
+	top:15vh;
+	bottom:60vh;
+	border:red solid 2px;
+	border-radius:2vw;
+	overflow:hidden;
+	padding:0px;
+}
+#battery>.fg {
+	display:block;
+	height:100%;
+		width:41vw;
+	border-right:2px solid red;
+	border-top:0px solid red;
+	border-bottom:0px solid red;
+	border-radius:0 2vw 2vw  0;
+	background-color:#45ed85;
+}
+#battery>.fg>.text {
+	position:relative;
+	display:block;
+	font-family:calibri;
+	height:100%;
+	width:100%;
+	font-size:11vh;
+	text-align:center;
+	padding-top:5.5vh;
+}
+#battery>.bg {
+}
+
+#commDetails {
+	border:2px solid red;
+	top:50vh;
+	left:21.5vw;
+	right:21vw;
+	position:absolute;
+	border-radius:1vw;
+	font-size:9vh;
+	font-family:calibri;
+	text-align:center;
+	padding-top:2vh;
+}
+#pluginButton {
+	border:2px solid red;
+	border-radius:2vw;
+	position:absolute;
+	bottom:0px;
+	left:21vw;
+	right:21vw;
+	font-family:calibri;
+	font-size:12vh;
+	text-align:center;
+}
+#batteryIcon {
+	position: absolute;
+	left:6vw;
+	top:22vh;
+	width:16vw;
+	height:18vh;
+}
