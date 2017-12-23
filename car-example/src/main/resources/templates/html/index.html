@@ -5,51 +5,24 @@
 	<meta http-equiv="x-ua-compatible" content="ie=edge"></meta>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
 	<title>The Smart Parking Demo - powered by Worldpay IoT Payments</title>
-	<link rel="stylesheet" href="css/foundation.css"></link>
-	<link rel="stylesheet" href="css/app.css"></link>
-	<link rel="stylesheet" href="css/ui-tweaks.css"></link>
+	<link rel="stylesheet" href="css/car-example.css"></link>
 	<link href="https://fonts.googleapis.com/css?family=Nunito+Sans" rel="stylesheet"></link>
 	<script src="js/jquery-2.1.4.js"></script>
-	<script src="js/vendor/what-input.js"></script>
-	<script src="js/vendor/foundation.js"></script>
-	<script src="js/app.js"></script>
 </head>
 
-<body class="mainBgColorRed fullBodyFont">
-	<div style="display:none">
-		<span style="" class="chkBtn">
-			<input type="checkbox" name="admin" id="chkAdmin" checked="">Hack mode</input>
-		</span>
-		<span style="" class="chkBtn">
-			<input type="checkbox" name="src" id="chkSrc">Data source</input>
-		</span>
+<body class="">
+	<div class="outerFrame" >
+		<img src="/images/battery.png" id="batteryIcon"></img>
+		<div id="battery"
+			class="battery outer"
+			><div class="battery fg" id="batteryChargeBar"
+				><div class="battery text" id="batteryValText">54%</div
+			><div class="battery bg" id="batteryBackgBar"></div
+			></div>
+		</div>
+		<div id="commDetails">Communication Details</div>
+		<div id="pluginButton"><span id="rechargeButton">Charge Car Button</span></div>
 	</div>
-	<div style="overflow:hidden;padding:0px;
-		border-radius:5px;
-		box-shadow: inset 2px 2px 3px black;
-		" id="jsonBoxBatt" class="adminMode"
-		><span id="jsonBoxBattVal"></span><span style="display:inline-block;height:100%;margin:0px;border:0px;padding:0px;width:0%;background-color:green;" id="jsonBoxBattGreen"
-		></span><span style="display:inline-block;height:100%;margin:0px;border:0px;padding:0px;width:0%;background-color:gray;" id="jsonBoxBattGray"
-		></span>
-	</div>
-	<div class="row" id="JSON-on-LCD">
-		<div class="line1">
-			<span style="height:auto;overflow:hidden;" id="jsonBoxFlow"></span>
-		</div>
-		<div class="line2">
-			<span style="width:304px;height:15px;" id="jsonBoxDescription"></span>
-		</div>
-		<div class="line3">
-			<span style="width:304px;height:15px;" id="jsonBoxUnits"></span>
-		</div>
-		<div class="line4">
-			<span style="width:304px;height:15px;" id="jsonBoxPrice"></span>
-		</div>
-		<div class="line5">
-			<span style="width:304px;height:15px;" class="hidden" id="jsonTimestamp"></span>
-		</div>
-		<div><span id="rechargeButton">Charge the battery</span></div>
-	</div>
-	<script src="js/wp-demo.js"></script>
+	<script src="js/car-example.js"></script>
 </body>
 </html>
