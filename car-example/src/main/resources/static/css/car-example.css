@@ -52,12 +52,14 @@ div.outerFrame {
 	font-family:calibri;
 	text-align:center;
 	padding-top:2vh;
+	max-height:25vh;
+	overflow-y:scroll;
 }
 #pluginButton {
 	border:2px solid red;
 	border-radius:2vw;
 	position:absolute;
-	bottom:0px;
+	bottom:5vh;
 	left:21vw;
 	right:21vw;
 	font-family:calibri;
