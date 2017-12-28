@@ -34,25 +34,28 @@ function processJSON(jsonPath){
 		if(data.hasOwnProperty('flow')){
 			document.getElementById('commDetails').innerHTML = data['flow'];
 		}else{
-			document.getElementById('commDetails').innerHTML = "";
+			//document.getElementById('commDetails').innerHTML = "";
 		}
 		if(data.hasOwnProperty('battery')){
 			var m = data['battery'].match(/^([0-9]+)$/);
 			if(m !== null && m.length>0 && m[1]>=0 && m[1]<=100){
 				// TODO: parseInt()
 				//document.getElementById('jsonBoxBatt').innerHTML = "charge parse error";
-				document.getElementById('batteryValText').innerText = m[1]+'%';
-				document.getElementById('batteryChargeBar').style.width = m[1]+'%';
+				updateChargeMeter(m[1]);
+				//document.getElementById('batteryValText').innerText = m[1]+'%';
+				//document.getElementById('batteryChargeBar').style.width = m[1]+'%';
 				//document.getElementById('jsonBoxBattGray').style.width = (100-m[1])+'%';
 			}else{
 				console.log("Cannot parse battery charge info", data['battery']);
-				document.getElementById('batteryValText').innerText = '';
-				document.getElementById('batteryChargeBar').style.width = '0px';
+				updateChargeMeter(null);
+				//document.getElementById('batteryValText').innerText = '';
+				//document.getElementById('batteryChargeBar').style.width = '0px';
 				//document.getElementById('jsonBoxBattGray').style.width = '0px';
 			}
 		}else{
-			document.getElementById('batteryValText').innerText = '';
-			document.getElementById('batteryChargeBar').style.width = '0';
+			updateChargeMeter(null);
+			//document.getElementById('batteryValText').innerText = '';
+			//document.getElementById('batteryChargeBar').style.width = '0';
 			//document.getElementById('jsonBoxBattGray').style.width = '0';
 		}
 		/*
@@ -79,9 +82,11 @@ function processJSON(jsonPath){
 		document.getElementById('jsonBoxUnits').innerHTML = "N/A";
 		document.getElementById('jsonTimestamp').innerHTML = "";
 		*/
+		/*
 		document.getElementById('commDetails').innerHTML = "N/A";
 		document.getElementById('batteryValText').innerText = '';
 		document.getElementById('batteryChargeBar').style.width = '0';
+		*/
 	})
 	.always(function(){
 		//console.log("always");
@@ -97,6 +102,49 @@ function processJSON(jsonPath){
 	;
 }
 
+var chargeMeterIsLocked = false;
+var skipOneUpdate = false;  // Decrease chance of sync issues between display and actual update
+function updateChargeMeter(val){
+	if(chargeMeterIsLocked){
+		skipOneUpdate = true;
+		return;
+	}
+	if(skipOneUpdate){
+		skipOneUpdate = false;
+		return;
+	}
+	document.getElementById("battRange").value = val;
+	setChargeMeter(val);
+}
+function setChargeMeter(val){
+	// Sets charge meter value (display only)
+	// To be called by functions that mangle with value on window or server
+	if(val === null){
+		// TODO: Add a marker
+		return;
+	}
+	document.getElementById("batteryChargeBar").style.width = val + "%";
+	document.getElementById("batteryValText").innerText = val + "%";
+}
+var batteryChargeBar = document.getElementById("batteryChargeBar");
+var batteryValText = document.getElementById("batteryValText");
+function lockChargeMeter(){
+	chargeMeterIsLocked = true;
+	//console.log("meter locked");
+	batteryChargeBar.style.transition="background-color 0s ease-out";
+	batteryChargeBar.style.backgroundColor="red";
+	batteryValText.style.transition="color 0s ease-out";
+	batteryValText.style.color="white";
+}
+function unlockChargeMeter(){
+	chargeMeterIsLocked = false;
+	//console.log("meter unlocked");
+	batteryChargeBar.style.transition="background-color 0.5s ease-out";
+	batteryChargeBar.style.backgroundColor="#45ed85";
+	batteryValText.style.transition="color 0.5s ease-out";
+	batteryValText.style.color="black";
+}
+
 function callJson(i) {
 	var jsonString = "../car-" + i + "-status.json?timefactor=" + (new Date());
 	//console.log(jsonString);
@@ -108,7 +156,44 @@ function callJson(i) {
 }
 
 
-//prepareCars(10);
+document.getElementById('battRange').ongotpointercapture=function(e){
+	lockChargeMeter();};
+document.getElementById('battRange').oninput=function(e){
+	lockChargeMeter();};
+document.getElementById('battRange').ontouchstart=function(e){
+	lockChargeMeter();};
+
+document.getElementById('battRange').onlostpointercapture=function(e){
+	unlockChargeMeter();};
+document.getElementById('battRange').ontouchend=function(e){
+	unlockChargeMeter();};
+
+document.getElementById('battRange').ontouchmove=function(e){
+	setChargeMeter(e.srcElement.value);};
+document.getElementById('battRange').onpointermove=function(e){
+	setChargeMeter(e.srcElement.value);};
+
+document.getElementById('battRange').onchange=function(e){
+	console.log("onchange",e);
+	//e.srcElement e.currentTarget e.target
+	// ondrag onscroll onseeking onscroll onselect ontouchmove ontouchstart onwheel
+	var val = e.srcElement.value;
+	if(val<0 || val>100){
+		console.warn("Computation error: e.offsetX/e.target.offsetWidth=...",e.offsetX,e.target.offsetWidth,val);
+		return;
+	}
+	//console.log('offsetX',e.offsetX);
+	//console.log('offsetWidth',e.target.offsetWidth);
+	//console.log('clientWidth',e.target.clientWidth);
+	var uri = document.URL.match(/(^https?:\/\/[^/]+)/)[0] + "/setCharge?data="+val;
+	$.ajax({url: uri})
+	.done(function(data){
+		//console.log("Charge set to "+e.offsetX);
+		console.log("Charge set to "+val);
+	});
+
+};
+/*
 $.ajaxSetup({'cache':true, timeout:300});
 document.getElementById('battery').onclick=function(e){
 	var val = Math.round(100*e.offsetX/e.target.offsetWidth);
@@ -126,6 +211,7 @@ document.getElementById('battery').onclick=function(e){
 		console.log("Charge set to "+val);
 	});
 };
+*/
 /*
 document.getElementById('chkAdmin').onclick=function(e){
 	console.log(e);
@@ -169,4 +255,5 @@ document.getElementById('pluginButton').onclick=function(e){
 	});
 };
 doGetSmartCarStatus();
-var smartCarStatusTimer = setInterval(doGetSmartCarStatus, 750 * 2);
+//var smartCarStatusTimer = setInterval(doGetSmartCarStatus, 750 * 2);
+var smartCarStatusTimer = setInterval(doGetSmartCarStatus, 500);

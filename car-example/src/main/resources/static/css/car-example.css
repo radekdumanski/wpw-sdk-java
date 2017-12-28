@@ -27,7 +27,15 @@ div.outerFrame {
 	border-bottom:0px solid red;
 	border-radius:0 2vw 2vw  0;
 	background-color:#45ed85;
+	transition:background-color 0.5s ease-out;
 }
+/*
+#battery:hover>.fg {
+	background-color:red;
+	transition:background-color 0s;
+	
+}
+*/
 #battery>.fg>.text {
 	position:relative;
 	display:block;
@@ -37,7 +45,15 @@ div.outerFrame {
 	font-size:11vh;
 	text-align:center;
 	padding-top:5.5vh;
+	color:black;
+	transition:color 0.5s ease-out;
 }
+/*
+#battery:hover>.fg>.text {
+	color:white;
+	transition:color 0s ease-out;
+}
+*/
 #battery>.bg {
 }
 
@@ -53,18 +69,24 @@ div.outerFrame {
 	text-align:center;
 	padding-top:2vh;
 	max-height:25vh;
-	overflow-y:scroll;
+	overflow-y:hidden;
 }
 #pluginButton {
 	border:2px solid red;
 	border-radius:2vw;
+	/*
 	position:absolute;
 	bottom:5vh;
 	left:21vw;
 	right:21vw;
+	*/
 	font-family:calibri;
 	font-size:12vh;
 	text-align:center;
+	max-width:90%;
+	display:inline-block;
+	padding-left:4vw;
+	padding-right:4vw;
 }
 #batteryIcon {
 	position: absolute;
@@ -72,4 +94,42 @@ div.outerFrame {
 	top:22vh;
 	width:16vw;
 	height:18vh;
+}
+#batteryValText {
+	pointer-events:none;
+}
+#battRange {
+	width:100%;
+	height:100%;
+	position:absolute;
+	
+	-webkit-appearance: none;
+	appearance: none;
+	outline:none;
+	background:rgba(0,0,0,0);
+	opacity:0;
+	transition:opacity 0.15s ease-in-out;
+}
+#battRange::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width:1vw;
+	height:25vh;
+	background: blue;
+	cursor:pointer;
+}
+
+/*
+#battRange:hover {
+	opacity:1;
+}
+*/
+.footer {
+	text-align:center;
+	align-items:center;
+	position:absolute;
+	bottom:0px;
+	left:0px;
+	right:0px;
+	height:20vh;
 }
