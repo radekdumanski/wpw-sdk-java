@@ -33,8 +33,6 @@ function processJSON(jsonPath){
 		*/
 		if(data.hasOwnProperty('flow')){
 			document.getElementById('commDetails').innerHTML = data['flow'];
-		}else{
-			//document.getElementById('commDetails').innerHTML = "";
 		}
 		if(data.hasOwnProperty('battery')){
 			var m = data['battery'].match(/^([0-9]+)$/);
@@ -58,46 +56,15 @@ function processJSON(jsonPath){
 			//document.getElementById('batteryChargeBar').style.width = '0';
 			//document.getElementById('jsonBoxBattGray').style.width = '0';
 		}
-		/*
-		if(data.hasOwnProperty('units')) {
-			document.getElementById('jsonBoxUnits').innerHTML = data['units'];
-		}else{
-			document.getElementById('jsonBoxUnits').innerHTML = "";
-		}
-		document.getElementById('jsonTimestamp').innerHTML = jqXHR.getResponseHeader("Date");
-		*/
 	})
 	.done(function(json){
 		//console.log("done", json);
 	})
 	.fail(function(){
 		console.log("Failed to get JSON");
-		/*
-		document.getElementById('jsonBoxPrice').innerHTML = "N/A";
-		document.getElementById('jsonBoxDescription').innerHTML = "N/A";
-		document.getElementById('jsonBoxFlow').innerHTML = "N/A";
-		document.getElementById('jsonBoxBattVal').innerText = '';
-		document.getElementById('jsonBoxBattGreen').style.width = '0';
-		document.getElementById('jsonBoxBattGray').style.width = '0';
-		document.getElementById('jsonBoxUnits').innerHTML = "N/A";
-		document.getElementById('jsonTimestamp').innerHTML = "";
-		*/
-		/*
-		document.getElementById('commDetails').innerHTML = "N/A";
-		document.getElementById('batteryValText').innerText = '';
-		document.getElementById('batteryChargeBar').style.width = '0';
-		*/
 	})
 	.always(function(){
 		//console.log("always");
-		/*
-		var s = document.querySelector("div.line1").style;
-		if(s.borderColor == "black"){
-			s.borderColor = "white"
-		}else{
-			s.borderColor = "black"
-		}
-		*/
 	})
 	;
 }
@@ -194,8 +161,6 @@ document.getElementById('battRange').onchange=function(e){
 
 };
 /*
-//prepareCars(10);
->>>>>>> origin/develop
 $.ajaxSetup({'cache':true, timeout:300});
 document.getElementById('battery').onclick=function(e){
 	var val = Math.round(100*e.offsetX/e.target.offsetWidth);
