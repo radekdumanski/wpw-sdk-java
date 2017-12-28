@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameste//EN"
+  "http://www.w3.org/TR/html4/frameset.dtd">
+<html class="" lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8"></meta>
+		<meta http-equiv="x-ua-compatible" content="ie=edge"></meta>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+		<title>WorldPay Within - "flow" page</title>
+		<script src="js/jquery-2.1.4.js"></script>
+<style type="text/css" id="svgcss">
+	body{background-color:white}
+	@keyframes pulse {
+		from{
+			-webkit-transform: scale3d( 1, 1, 1);
+			transform: scale3d( 1, 1, 1);
+		}
+		50%{
+			-webkit-transform: scale3d( 1.05, 1.05, 1.05);
+			transform: scale3d( 1.05, 1.05, 1.05);
+		}
+		to{
+			-webkit-transform: scale3d( 1, 1, 1);
+			transform: scale3d( 1, 1, 1);
+		}
+	}
+	.pulse{
+		animation-name: pulse;
+	}
+	.animated{
+		-webkit-animation-duration: 1s;
+		animation-duration: 1s;
+	}
+	.dupa{
+		opacity:0.5;
+		stroke-width:5px; 
+	}
+</style>
+	</head>
+	<body>
+	<!--
+		<img src="anim/5G.png"      style="position:absolute; opacity:1; top:35%; left:40%; width:20%;height:40%;"></img>
+		<img src="anim/Car.png"     style="position:absolute; opacity:1; top:50%; left:5%; width:20%;height:50%;"></img>
+		<img src="anim/Charger.png" style="position:absolute; opacity:1; top:60%; left:75%; width:20%;height:30%;"></img>
+		<img src="anim/Cloud.png"   style="position:absolute; opacity:1; top:20%; left:40%; width:20%;height:10%;"></img>
+		<img src="anim/OWP.png"     style="position:absolute; opacity:1; top:5%; left:40%; width:20%;height:10%;"></img>
+		-->
+		<object id="anim" data="drawing.svg" type="image/svg+xml" style="width:100vw;height:100vh;">
+			<style type="text/css">
+	@keyframes pulse {
+		from{
+			-webkit-transform: scale3d( 1, 1, 1);
+			transform: scale3d( 1, 1, 1);
+		}
+		50%{
+			-webkit-transform: scale3d( 1.05, 1.05, 1.05);
+			transform: scale3d( 1.05, 1.05, 1.05);
+		}
+		to{
+			-webkit-transform: scale3d( 1, 1, 1);
+			transform: scale3d( 1, 1, 1);
+		}
+	}
+	.pulse{
+		animation-name: pulse;
+	}
+	.animated{
+		-webkit-animation-duration: 1s;
+		animation-duration: 1s;
+	}
+	.dupa{
+		opacity:0.5;
+		stroke-width:5px; 
+	}
+			</style>
+		</object>
+	<script src="js/wpw.js"></script>
+	</body>
+</html>

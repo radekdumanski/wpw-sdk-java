@@ -29,13 +29,6 @@ div.outerFrame {
 	background-color:#45ed85;
 	transition:background-color 0.5s ease-out;
 }
-/*
-#battery:hover>.fg {
-	background-color:red;
-	transition:background-color 0s;
-	
-}
-*/
 #battery>.fg>.text {
 	position:relative;
 	display:block;
@@ -48,12 +41,6 @@ div.outerFrame {
 	color:black;
 	transition:color 0.5s ease-out;
 }
-/*
-#battery:hover>.fg>.text {
-	color:white;
-	transition:color 0s ease-out;
-}
-*/
 #battery>.bg {
 }
 
@@ -74,12 +61,6 @@ div.outerFrame {
 #pluginButton {
 	border:2px solid red;
 	border-radius:2vw;
-	/*
-	position:absolute;
-	bottom:5vh;
-	left:21vw;
-	right:21vw;
-	*/
 	font-family:calibri;
 	font-size:12vh;
 	text-align:center;
@@ -118,12 +99,6 @@ div.outerFrame {
 	background: blue;
 	cursor:pointer;
 }
-
-/*
-#battRange:hover {
-	opacity:1;
-}
-*/
 .footer {
 	text-align:center;
 	align-items:center;

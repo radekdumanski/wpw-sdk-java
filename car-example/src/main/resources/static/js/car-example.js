@@ -194,6 +194,8 @@ document.getElementById('battRange').onchange=function(e){
 
 };
 /*
+//prepareCars(10);
+>>>>>>> origin/develop
 $.ajaxSetup({'cache':true, timeout:300});
 document.getElementById('battery').onclick=function(e){
 	var val = Math.round(100*e.offsetX/e.target.offsetWidth);
@@ -236,8 +238,17 @@ document.getElementById('chkSrc').onclick=function(e){
 	}
 };
 */
-document.getElementById('pluginButton').onclick=function(e){
-	console.log(e);
+var pluginButton = document.getElementById('pluginButton');
+pluginButton.onclick=function(e){
+	console.log(pluginButton);
+	pluginButton.style.transition='all ease 0.4s';
+	pluginButton.style.color="white";
+	pluginButton.style.backgroundColor ="red";
+	setTimeout(function() {
+		pluginButton.style.transition='all ease 0.4s';
+		pluginButton.style.color="black";
+		pluginButton.style.backgroundColor ="white";
+	}, 500);
 	//var uri = "http://127.0.0.1:8000/plugin";
 	var uri = document.URL.match(/(^https?:\/\/[^/]+)/)[0] + "/plugin";
 	$.ajax({url: uri})
