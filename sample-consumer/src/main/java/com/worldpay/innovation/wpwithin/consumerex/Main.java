@@ -1,6 +1,8 @@
 package com.worldpay.innovation.wpwithin.consumerex;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Iterator;
@@ -29,7 +31,7 @@ public class Main {
     public static void main(String[] args) {
 
         System.out.println("Starting Consumer Example Written in Java.");
-        loadConfig();
+        loadConfig("sample-consumer.json");
         wpw = new WPWithinWrapperImpl(config.getHost(), config.getPort(), true, rpcAgentListener, rpcLogFile);
 
         try {
@@ -263,15 +265,37 @@ public class Main {
     /**
      * Loads config and path to logfile
      */
-    private static void loadConfig() {
-        // define log file name for the rpc agent (based on the package name),
-        // e.g. "rpc-within-consumerex.log";
-        String[] splitedPkgName = Main.class.getPackage().getName().split("\\.");
-        rpcLogFile = "rpc-within-" + splitedPkgName[splitedPkgName.length-1] + ".log";
+	@SuppressWarnings("resource")
+	private static void loadConfig(String fileName) {
+		// define log file name for the rpc agent (based on the package name),
+		// e.g. "rpc-within-consumerex.log";
+		String[] splitedPkgName = Main.class.getPackage().getName().split("\\.");
+		rpcLogFile = "rpc-within-" + splitedPkgName[splitedPkgName.length - 1] + ".log";
 		Gson gson = new Gson();
-		InputStream stream = Config.class.getResourceAsStream("/sample-consumer.json");
-		String result = new BufferedReader(new InputStreamReader(stream)).lines().collect(Collectors.joining("\n"));
-		// System.out.println(result);
-		config = gson.fromJson(result, Config.class);
-    }
+		String jsonConfig = null;
+		String configFilePath = System.getProperty("config");
+		if (configFilePath == null) {
+			try {
+				jsonConfig = new BufferedReader(new FileReader(fileName)).lines()
+						.collect(Collectors.joining("\n"));
+				System.out.println("Loading config file: "+fileName+ " from current working directory.");
+			} catch (FileNotFoundException e) {
+				System.out.println("Loading default config from attached resources.");
+				InputStream stream = Config.class.getResourceAsStream("/"+fileName);
+				jsonConfig = new BufferedReader(new InputStreamReader(stream)).lines()
+						.collect(Collectors.joining("\n"));
+			}
+		}
+		else {
+			try {
+				System.out.println("Loading config file from: "+configFilePath);
+				jsonConfig = new BufferedReader(new FileReader(configFilePath)).lines()
+						.collect(Collectors.joining("\n"));
+			} catch (FileNotFoundException e) {
+				System.out.println("Config file was not found in: "+configFilePath);
+				e.printStackTrace();
+			}
+		}
+		config = gson.fromJson(jsonConfig, Config.class);
+	}
 }

@@ -42,15 +42,4 @@ public class ChargerController {
 	public String stopBroadcasting() {
 		return this.charger.stopBroadcasting();
 	}
-
-	// private static final Listener rpcAgentListener = new Listener() {
-	// @Override
-	// public void onApplicationExit(int exitCode, String stdOutput, String
-	// errOutput) {
-	//
-	// System.out.printf("RPC Agent process did exit.\n\r");
-	// System.out.printf("ExitCode: %d\n\r", exitCode);
-	// }
-	// };
-
 }
