@@ -1,6 +1,8 @@
 package org.car.example;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.stream.Collectors;
@@ -25,32 +27,21 @@ public class SampleController {
 	private WPWithinWrapper wpw;
 
 	public SampleController() {
-		loadConfig();
+		loadConfig("car-example.json");
 		this.wpw = new WPWithinWrapperImpl(config.getHost(), config.getPort(), true, rpcAgentListener, rpcLogFile);
 		smartCar = new SmartCar(wpw, config);
 	}
 
-	@CrossOrigin
 	@RequestMapping("/setCharge")
+	@ResponseBody
 	public String setCharge(@RequestParam("data") int batteryLevel) throws InterruptedException {
-		// setchargeXXX
 		smartCar.setChargeLevel(batteryLevel);
-		return "html/index";
+		return "Charge set to: "+batteryLevel;
 	}
 
 	@RequestMapping("/")
-	String getIndex() {
-		return "html/index";
-	}
-
-	@RequestMapping("/smartCar")
 	String getSmartCarPage() {
-		return "html/smartCar";
-	}
-
-	@RequestMapping("/producer")
-	String getProducerPage() {
-		return "html/producer";
+		return "html/index";
 	}
 
 	@CrossOrigin
@@ -79,16 +70,36 @@ public class SampleController {
 	/**
 	 * Loads config and path to logfile
 	 */
-	private static void loadConfig() {
-		// define log file name for the rpc agent (based on the package name),
-		// e.g. "rpc-within-consumerex.log";
-		String[] splitedPkgName = Main.class.getPackage().getName().split("\\.");
-		rpcLogFile = "rpc-within-" + splitedPkgName[splitedPkgName.length - 1] + ".log";
+	@SuppressWarnings("resource")
+	private static void loadConfig(String fileName) {
+		rpcLogFile = "rpc-within-car-example.log";
 		Gson gson = new Gson();
-		InputStream stream = Config.class.getResourceAsStream("/car-example.json");
-		String result = new BufferedReader(new InputStreamReader(stream)).lines().collect(Collectors.joining("\n"));
-		// System.out.println(result);
-		config = gson.fromJson(result, Config.class);
+		String jsonConfig = null;
+		String configFilePath = System.getProperty("config");
+		if (configFilePath == null) {
+			try {
+				jsonConfig = new BufferedReader(new FileReader(fileName)).lines()
+						.collect(Collectors.joining("\n"));
+				System.out.println("Loading config file: "+fileName+ " from current working directory.");
+			} catch (FileNotFoundException e) {
+				System.out.println("Loading default config from attached resources.");
+				InputStream stream = Config.class.getResourceAsStream("/"+fileName);
+				jsonConfig = new BufferedReader(new InputStreamReader(stream)).lines()
+						.collect(Collectors.joining("\n"));
+			}
+		}
+		else {
+			try {
+				System.out.println("Loading config file from: "+configFilePath);
+				jsonConfig = new BufferedReader(new FileReader(configFilePath)).lines()
+						.collect(Collectors.joining("\n"));
+			} catch (FileNotFoundException e) {
+				System.out.println("Config file was not found in: "+configFilePath);
+				e.printStackTrace();
+			}
+		}
+		config = gson.fromJson(jsonConfig, Config.class);
 	}
+	
 
 }

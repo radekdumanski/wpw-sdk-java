@@ -1,9 +1,16 @@
 package org.car.charger;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.stream.Collectors;
+
+import java.util.Date;
+import java.util.TimeZone;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import org.json.simple.JSONObject;
 
@@ -22,29 +29,62 @@ public class Charger {
 	private static Config config;
 	private WPWithinWrapper wpw;
 	private JSONObject chargerJsonObject;
+	private boolean broadcasting;
 
-	public void setChargerJsonObject(JSONObject chargerJsonObject) {
-		this.chargerJsonObject = chargerJsonObject;
+	/**
+	 * Initializes JSONObject as we keep charger's state information there This
+	 * should be moved to some specific object props in the future to get code a bit
+	 * cleaner
+	 */
+	public Charger() {
+		this.chargerJsonObject = new JSONObject();
 	}
 
-	private void updateFlow(JSONObject obj, JsonTags tag, String msg) {
-		obj.put(tag.getTag(), msg);
+	private void updateFlow(JsonTags tag, String msg) {
+		chargerJsonObject.put(tag.getTag(), msg);
 	}
 
 	public JSONObject getChargerJsonObject() {
+		TimeZone tz = TimeZone.getTimeZone("UTC");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		df.setTimeZone(tz);
+		this.chargerJsonObject.put(JsonTags.TIMESTAMP.getTag(), df.format(new Date()));
 		return this.chargerJsonObject;
 	}
 
-	public void run() throws Exception {
+	public String startBroadcasting() { // sync?
+		if (this.broadcasting == true) {
+			return "{\"status\":\"already started?\"}"; // exception ?
+		}
+		this.broadcasting = true;
+		wpw.startServiceBroadcast(0);
+		updateFlow(JsonTags.BROADCAST_STATUS, "broadcasting");
+		updateFlow(JsonTags.FLOW, "Broadcasting...");
+		return "{\"status\":\"started\"}";
+	}
 
+	public String stopBroadcasting() { // sync?
+		if (this.broadcasting == false) {
+			return "{\"status\":\"already stopped?\"}"; // exception ?
+		}
+		this.broadcasting = false;
+		wpw.stopServiceBroadcast();
+		updateFlow(JsonTags.BROADCAST_STATUS, "off");
+		updateFlow(JsonTags.FLOW, "standby");
+		return "{\"status\":\"stopped\"}";
+	}
+
+	public void run() throws Exception {
 		try {
-			JSONObject chargerObj = new JSONObject();
-			updateFlow(chargerObj, JsonTags.FLOW, "Car charger example...");
-			chargerJsonObject = chargerObj;
-			loadConfig();
-			wpw = new WPWithinWrapperImpl(config.getHost(), config.getPort(), true, wpWithinEventListener, 10003, rpcAgentListener,
-					rpcLogFile);
-			wpw.setup("Car charger", "Car charger device.");
+
+			// Begin
+			updateFlow(JsonTags.FLOW, "Car charger example...");
+
+			// Load config, init WPW and start broadcasting
+			loadConfig("charger.json");
+			wpw = new WPWithinWrapperImpl(config.getHost(), config.getPort(), true, wpWithinEventListener,
+					config.getCallbackPort(), rpcAgentListener, rpcLogFile);
+			wpw.setup(config.getDeviceName(), "Car charger device.", config.getInterfaceAddr());
 
 			WWService svc = new WWService();
 			svc.setName("Car charger");
@@ -54,12 +94,12 @@ public class Charger {
 			svc.setPrices(chargingServices.getServicesMap());
 			wpw.addService(svc);
 			wpw.initProducer(config.getPspConfig());
-			updateFlow(chargerObj, JsonTags.FLOW, "Broadcasting...");
-			chargerJsonObject = chargerObj;
+			updateFlow(JsonTags.FLOW, "Broadcasting...");
+			this.broadcasting = true;
 			wpw.startServiceBroadcast(0);
-
+			updateFlow(JsonTags.BROADCAST_STATUS, "broadcasting");
 		} catch (WPWithinGeneralException e) {
-
+			updateFlow(JsonTags.FLOW, e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -69,71 +109,84 @@ public class Charger {
 		@Override
 		public void onBeginServiceDelivery(int serviceID, int servicePriceID,
 				WWServiceDeliveryToken wwServiceDeliveryToken, int unitsToSupply) throws WPWithinGeneralException {
-			JSONObject chargerObj = new JSONObject();
-			updateFlow(chargerObj, JsonTags.FLOW,
+			updateFlow(JsonTags.FLOW,
 					"Service delivery phase: " + wpw.getDevice().getServices().get(serviceID).getName());
-			updateFlow(chargerObj, JsonTags.DESCRIPTION, "Option to provide: "
+			updateFlow(JsonTags.DESCRIPTION, "Option to provide: "
 					+ wpw.getDevice().getServices().get(serviceID).getPrices().get(servicePriceID).getDescription());
-			updateFlow(chargerObj, JsonTags.UNITS, "UnitsToSupply: " + unitsToSupply);
-			setChargerJsonObject(chargerObj);
+			updateFlow(JsonTags.UNITS, "UnitsToSupply: " + unitsToSupply);
+			updateFlow(JsonTags.SERVICE_STATUS, "delivering");
 		}
 
 		@Override
 		public void onEndServiceDelivery(int serviceID, WWServiceDeliveryToken wwServiceDeliveryToken,
 				int unitsReceived) throws WPWithinGeneralException {
 
-			JSONObject chargerObj = new JSONObject();
-			updateFlow(chargerObj, JsonTags.FLOW, "Broadcasting...");
-			chargerJsonObject = chargerObj;
+			updateFlow(JsonTags.FLOW, "Broadcasting...");
+			updateFlow(JsonTags.SERVICE_STATUS, "standby");
+			updateFlow(JsonTags.DESCRIPTION, "");
+			updateFlow(JsonTags.UNITS, "");
 		}
 
 		@Override
 		public void onMakePaymentEvent(int totalPrice, String orderCurrency, String clientToken,
 				String orderDescription, String uuid) throws WPWithinGeneralException {
 
-			JSONObject chargerObj = new JSONObject();
-			updateFlow(chargerObj, JsonTags.FLOW, "Making payment...");
-			updateFlow(chargerObj, JsonTags.DESCRIPTION, "Order description: " + orderDescription);
-			updateFlow(chargerObj, JsonTags.UNITS, "Total price: " + ((float) totalPrice) / 100 + orderCurrency);
-			setChargerJsonObject(chargerObj);
+			updateFlow(JsonTags.FLOW, "Making payment...");
+			updateFlow(JsonTags.DESCRIPTION, "Order description: " + orderDescription);
+			updateFlow(JsonTags.UNITS, "Total price: " + ((float) totalPrice) / 100 + orderCurrency);
+
+			TimeZone tz = TimeZone.getTimeZone("UTC");
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+			df.setTimeZone(tz);
+			updateFlow(JsonTags.LAST_PAYMENT_RECEIVED_TIMESTAMP, df.format(new Date()));
 		}
 
 		@Override
 		public void onErrorEvent(String msg) throws WPWithinGeneralException {
 
-			JSONObject chargerObj = new JSONObject();
-			updateFlow(chargerObj, JsonTags.FLOW, "Error occurred: " + msg);
-			setChargerJsonObject(chargerObj);
-
+			updateFlow(JsonTags.FLOW, "Error occurred: " + msg);
 		}
 
 		@Override
 		public void onServiceDiscoveryEvent(String remoteAddr) throws WPWithinGeneralException {
-			JSONObject chargerObj = new JSONObject();
-			updateFlow(chargerObj, JsonTags.FLOW, "Service query phase...");
-			updateFlow(chargerObj, JsonTags.DESCRIPTION, "Connected client: " + remoteAddr);
-			setChargerJsonObject(chargerObj);
+			updateFlow(JsonTags.FLOW, "Service query phase...");
+			updateFlow(JsonTags.DESCRIPTION, "Connected client: " + remoteAddr);
+			updateFlow(JsonTags.UNITS, "");
+
+			TimeZone tz = TimeZone.getTimeZone("UTC");
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+			df.setTimeZone(tz);
+			
+			updateFlow(JsonTags.LAST_DISCOVERY_TIMESTAMP, df.format(new Date()));
 		}
 
 		@Override
 		public void onServicePricesEvent(String remoteAddr, int serviceId) throws WPWithinGeneralException {
 
-			JSONObject chargerObj = new JSONObject();
-			updateFlow(chargerObj, JsonTags.FLOW, "Service negotiation...1/2");
-			updateFlow(chargerObj, JsonTags.DESCRIPTION,
+			updateFlow(JsonTags.FLOW, "Service negotiation...1/2");
+			updateFlow(JsonTags.DESCRIPTION,
 					"Service selected: " + wpw.getDevice().getServices().get(serviceId).getName());
-			setChargerJsonObject(chargerObj);
+			updateFlow(JsonTags.UNITS, "");
+
+			TimeZone tz = TimeZone.getTimeZone("UTC");
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+			df.setTimeZone(tz);
+			updateFlow(JsonTags.LAST_SERVICE_PRICES_TIMESTAMP, df.format(new Date()));
 		}
 
 		@Override
 		public void onServiceTotalPriceEvent(String remoteAddr, int serviceId, WWTotalPriceResponse totalPriceResponse)
 				throws WPWithinGeneralException {
 
-			JSONObject chargerObj = new JSONObject();
-			updateFlow(chargerObj, JsonTags.FLOW, "Service negotiation...2/2");
-			updateFlow(chargerObj, JsonTags.DESCRIPTION, "Option selected: " + wpw.getDevice().getServices()
-					.get(serviceId).getPrices().get(totalPriceResponse.getPriceId()).getDescription());
-			setChargerJsonObject(chargerObj);
+			updateFlow(JsonTags.FLOW, "Service negotiation...2/2");
+			updateFlow(JsonTags.DESCRIPTION, "Option selected: " + wpw.getDevice().getServices().get(serviceId)
+					.getPrices().get(totalPriceResponse.getPriceId()).getDescription());
+			updateFlow(JsonTags.UNITS, "");
+
+			TimeZone tz = TimeZone.getTimeZone("UTC");
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+			df.setTimeZone(tz);
+			updateFlow(JsonTags.LAST_SERVICE_TOTAL_PRICE_TIMESTAMP, df.format(new Date()));
 		}
 	};
 
@@ -151,14 +204,37 @@ public class Charger {
 	/**
 	 * Loads config and path to logfile
 	 */
-	private static void loadConfig() {
+	@SuppressWarnings("resource")
+	private static void loadConfig(String fileName) {
 		// define log file name for the rpc agent (based on the package name),
 		// e.g. "rpc-within-consumerex.log";
 		String[] splitedPkgName = Main.class.getPackage().getName().split("\\.");
 		rpcLogFile = "rpc-within-" + splitedPkgName[splitedPkgName.length - 1] + ".log";
 		Gson gson = new Gson();
-		InputStream stream = Config.class.getResourceAsStream("/charger.json");
-		String result = new BufferedReader(new InputStreamReader(stream)).lines().collect(Collectors.joining("\n"));
-		config = gson.fromJson(result, Config.class);
+		String jsonConfig = null;
+		String configFilePath = System.getProperty("config");
+		if (configFilePath == null) {
+			try {
+				jsonConfig = new BufferedReader(new FileReader(fileName)).lines()
+						.collect(Collectors.joining("\n"));
+				System.out.println("Loading config file: "+fileName+ " from current working directory.");
+			} catch (FileNotFoundException e) {
+				System.out.println("Loading default config from attached resources.");
+				InputStream stream = Config.class.getResourceAsStream("/"+fileName);
+				jsonConfig = new BufferedReader(new InputStreamReader(stream)).lines()
+						.collect(Collectors.joining("\n"));
+			}
+		}
+		else {
+			try {
+				System.out.println("Loading config file from: "+configFilePath);
+				jsonConfig = new BufferedReader(new FileReader(configFilePath)).lines()
+						.collect(Collectors.joining("\n"));
+			} catch (FileNotFoundException e) {
+				System.out.println("Config file was not found in: "+configFilePath);
+				e.printStackTrace();
+			}
+		}
+		config = gson.fromJson(jsonConfig, Config.class);
 	}
 }

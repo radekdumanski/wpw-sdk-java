@@ -17,6 +17,11 @@ public class ChargerController {
 		this.charger.run();
 	}
 
+	@RequestMapping("/")
+	public String getProducerPage() {
+		return "html/index";
+	}
+	
 	@CrossOrigin
 	@RequestMapping(value = "/getChargerStatus", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
@@ -24,14 +29,17 @@ public class ChargerController {
 		return this.charger.getChargerJsonObject().toJSONString();
 	}
 
-	// private static final Listener rpcAgentListener = new Listener() {
-	// @Override
-	// public void onApplicationExit(int exitCode, String stdOutput, String
-	// errOutput) {
-	//
-	// System.out.printf("RPC Agent process did exit.\n\r");
-	// System.out.printf("ExitCode: %d\n\r", exitCode);
-	// }
-	// };
+	@CrossOrigin
+	@RequestMapping(value = "/startBroadcasting", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public String startBroadcasting() {
+		return this.charger.startBroadcasting();
+	}
 
+	@CrossOrigin
+	@RequestMapping(value = "/stopBroadcasting", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public String stopBroadcasting() {
+		return this.charger.stopBroadcasting();
+	}
 }

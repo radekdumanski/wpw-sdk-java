@@ -5,6 +5,8 @@
  */
 package com.worldpay.innovation.wpwithin.test;
 
+
+
 import org.junit.Test;
 
 import com.worldpay.innovation.wpwithin.WPWithinGeneralException;
@@ -23,9 +25,21 @@ public class WpwSdkTest {
 	private static String LOGFILE = "logfile";
 
 	@Test(expected = WPWithinGeneralException.class)
-	public void teExceptionTest() {
+	public void stopRPCAgentTest() {
 		this.wpw = new WPWithinWrapperImpl(HOST, PORT, false, null, LOGFILE);
 		wpw.stopRPCAgent();
+	}
+	
+	@Test(expected = WPWithinGeneralException.class)
+	public void startServiceBroadcastTest() {
+		this.wpw = new WPWithinWrapperImpl(HOST, PORT, false, null, LOGFILE);
+		wpw.startServiceBroadcast(10);
+	}
+	
+	@Test(expected = WPWithinGeneralException.class)
+	public void stopServiceBroadcastTest() {
+		this.wpw = new WPWithinWrapperImpl(HOST, PORT, false, null, LOGFILE);
+		wpw.stopServiceBroadcast();
 	}
 	
 	@Test(expected = WPWithinGeneralException.class)
@@ -33,5 +47,10 @@ public class WpwSdkTest {
 		this.wpw = new WPWithinWrapperImpl(HOST, PORT, false, null, LOGFILE);
 		wpw.searchForDevice(1000, "device");
 	}
-
+	
+	@Test(expected = WPWithinGeneralException.class)
+	public void setup() {
+		this.wpw = new WPWithinWrapperImpl(HOST, PORT, false, null, LOGFILE);
+		wpw.setup("my", "device", null);
+	}
 }

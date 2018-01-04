@@ -38,7 +38,7 @@ public class DeviceScanner {
             wpw = new WPWithinWrapperImpl("127.0.0.1", 10001, true, rpcAgentListener, rpcLogFile);
 
         try {
-            wpw.setup("kevingwp-java-scanner", "Kevin Gordons Java DEVICE SCANNER");
+            wpw.setup("kevingwp-java-scanner", "Kevin Gordons Java DEVICE SCANNER", null);
             wpwDevice = wpw.getDevice();
             if(wpwDevice != null) {
                   

@@ -1,14 +1,14 @@
 package com.worldpay.innovation.wpwithin.producercallbackex;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
-import com.worldpay.innovation.wpwithin.PSPConfig;
 import com.worldpay.innovation.wpwithin.WPWithinGeneralException;
 import com.worldpay.innovation.wpwithin.WPWithinWrapper;
 import com.worldpay.innovation.wpwithin.WPWithinWrapperImpl;
@@ -23,18 +23,16 @@ import com.worldpay.innovation.wpwithin.types.WWTotalPriceResponse;
 public class Main {
 	private static Config config;
 	private static String rpcLogFile;
-	
+
 	public static void main(String[] args) {
 
 		try {
+			loadConfig("sample-producer-callbacks.json");
+			System.out.println("WorldpayWithin Sample Producer: " + config.getDeviceName());
+			WPWithinWrapper wpw = new WPWithinWrapperImpl(config.getHost(), config.getPort(), true,
+					wpWithinEventListener, config.getCallbackPort(), rpcAgentListener, rpcLogFile);
 
-			System.out.println("WorldpayWithin Sample Producer...");
-			loadConfig();
-			WPWithinWrapper wpw = new WPWithinWrapperImpl(config.getHost(), config.getPort(), true, wpWithinEventListener, 10010,
-					rpcAgentListener, rpcLogFile);
-
-			wpw.setup("Producer Example", "Example WorldpayWithin producer");
-
+			wpw.setup(config.getDeviceName(), "Example WorldpayWithin producer", config.getInterfaceAddr());
 			WWService svc = new WWService();
 			svc.setName("Car charger");
 			svc.setDescription("Can charge your hybrid / electric car");
@@ -154,14 +152,35 @@ public class Main {
 	/**
 	 * Loads config and path to logfile
 	 */
-	private static void loadConfig() {
+	@SuppressWarnings("resource")
+	private static void loadConfig(String fileName) {
 		// define log file name for the rpc agent (based on the package name),
 		// e.g. "rpc-within-consumerex.log";
 		String[] splitedPkgName = Main.class.getPackage().getName().split("\\.");
 		rpcLogFile = "rpc-within-" + splitedPkgName[splitedPkgName.length - 1] + ".log";
 		Gson gson = new Gson();
-		InputStream stream = Config.class.getResourceAsStream("/sample-producer-callbacks.json");
-		String result = new BufferedReader(new InputStreamReader(stream)).lines().collect(Collectors.joining("\n"));
-		config = gson.fromJson(result, Config.class);
+		String jsonConfig = null;
+		String configFilePath = System.getProperty("config");
+		if (configFilePath == null) {
+			try {
+				jsonConfig = new BufferedReader(new FileReader(fileName)).lines().collect(Collectors.joining("\n"));
+				System.out.println("Loading config file: " + fileName + " from current working directory.");
+			} catch (FileNotFoundException e) {
+				System.out.println("Loading default config from attached resources.");
+				InputStream stream = Config.class.getResourceAsStream("/" + fileName);
+				jsonConfig = new BufferedReader(new InputStreamReader(stream)).lines()
+						.collect(Collectors.joining("\n"));
+			}
+		} else {
+			try {
+				System.out.println("Loading config file from: " + configFilePath);
+				jsonConfig = new BufferedReader(new FileReader(configFilePath)).lines()
+						.collect(Collectors.joining("\n"));
+			} catch (FileNotFoundException e) {
+				System.out.println("Config file was not found in: " + configFilePath);
+				e.printStackTrace();
+			}
+		}
+		config = gson.fromJson(jsonConfig, Config.class);
 	}
 }

@@ -1,37 +1,6 @@
 function doGetSmartCarStatus() {
-	var els = document.getElementsByName('flow-json-source');
 	var lnk = document.getElementById('flow-json-link');
-	var uri = "";
-	if(els.length==0){
-		console.warn("Cannot find flow-json-source element, using default");
-		uri="../flow.json";
-	}else{
-		switch(els[0].value){
-			case "ajax-lo":
-				uri = "/flow.json";
-				break;
-			case "ajax-mawk":
-				uri = "http://192.168.137.3:8000/flow.json";
-				break;
-			case "ajax-lo-java":
-				uri = "http://127.0.0.1:8000/getStatus";
-				break;
-			case "ajax-wabe":
-				uri = "http://192.168.35.7:8000/getstatus"
-				break;
-			case "ajax-bamr":
-				uri = "http://192.168.34.165:8000/getStatus"
-				break;
-			case "file":
-				uri = "../flow.json";
-				break;
-			default:
-				uri = "../flow.json";
-				break;
-		}
-		document.getElementById('flow-json-link-a').href=uri;
-		document.getElementById('flow-json-link-a').innerText=uri;
-	}
+	var uri = document.URL.match(/(^https?:\/\/[^/]+)/)[0] + "/getStatus";
 	processJSON(uri);
 }
 
@@ -143,7 +112,7 @@ document.getElementById('jsonBoxBatt').onclick=function(e){
 	//console.log('offsetX',e.offsetX);
 	//console.log('offsetWidth',e.target.offsetWidth);
 	//console.log('clientWidth',e.target.clientWidth);
-	var uri = 'http://127.0.0.1:8000/setCharge?data='+val;
+	var uri = document.URL.match(/(^https?:\/\/[^/]+)/)[0] + "/setCharge?data="+val;
 	$.ajax({url: uri})
 	.done(function(data){
 		//console.log("Charge set to "+e.offsetX);
@@ -172,7 +141,8 @@ document.getElementById('chkSrc').onclick=function(e){
 };
 document.getElementById('rechargeButton').onclick=function(e){
 	console.log(e);
-	var uri = "http://127.0.0.1:8000/plugin";
+	//var uri = "http://127.0.0.1:8000/plugin";
+	var uri = document.URL.match(/(^https?:\/\/[^/]+)/)[0] + "/plugin";
 	$.ajax({url: uri})
 	.fail(function(jqXHR, textStatus, errorThrown){
 		if(jqXHR.status == 409){

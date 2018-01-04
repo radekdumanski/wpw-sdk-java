@@ -1,0 +1,48 @@
+#JSON-on-LCD {
+	margin:2vh 2vw 0px 2vw;
+	font-size:7vmin;
+	max-width: 96vw;
+	max-height: 96vh;
+	width:96vw;
+	height:96vh;
+	border-radius:0.5em;
+	box-shadow:inset 0.5vw 0.5vh 1vmax black;
+	padding:0.5em;
+	background-color:rgba(255,255,255,0.25);
+}
+#JSON-on-LCD > div {
+	line-height:9vh;
+}
+#JSON-on-LCD > div.line1 {
+	border-top:0.5vmin solid black;
+	border-top-left-radius:0.5em;
+	border-top-right-radius:0.5em;
+	border-bottom:1px solid black;
+	border-bottom-left-radius:0.5em;
+	border-bottom-right-radius:0.5em;
+	-webkit-transition : border 500ms ease-out;
+	-moz-transition : border 500ms ease-out;
+	-o-transition : border 500ms ease-out;
+	transition : border 500ms ease-out;
+	height:2.5em;
+	align-items:center;
+}
+#JSON-on-LCD > div.line2 {
+}
+#JSON-on-LCD > div > span {
+	display:inline-block;
+	border:none;
+	margin:0px;
+}
+#jsonTimestamp {
+	font-size:0.5em;
+	color: black;
+	position:fixed;
+	left:4vw;
+	width:90vw;
+	bottom:4vh;
+	color:rgba(0,0,0,0.5);
+}
+.mainBgColorRed{
+	background-color:#f90019;
+}
