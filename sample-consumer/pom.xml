@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.worldpay.innovation</groupId>
 		<artifactId>wpw-sdk-java</artifactId>
-		<version>v0.11-alpha</version>
+		<version>v0.12-alpha</version>
 	</parent>
 	<artifactId>sample-consumer</artifactId>
 	<name>sample-consumer</name>
@@ -62,7 +62,7 @@
 		<dependency>
 			<groupId>com.worldpay.innovation.wpw-sdk-java</groupId>
 			<artifactId>sdk</artifactId>
-			<version>v0.11-alpha</version>
+			<version>v0.12-alpha</version>
 		</dependency>
 	</dependencies>
 	<groupId>com.worldpay.innovation.wpw-sdk-java</groupId>

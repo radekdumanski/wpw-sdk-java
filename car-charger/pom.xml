@@ -7,11 +7,9 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.5.7.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.worldpay.innovation</groupId>
 	<artifactId>car-charger</artifactId>
-	<version>v0.10-alpha</version>
 	<name>car-charger</name>
 	<url>http://maven.apache.org</url>
 	<build>
@@ -70,7 +68,7 @@
 		<dependency>
 			<groupId>com.worldpay.innovation.wpw-sdk-java</groupId>
 			<artifactId>sdk</artifactId>
-			<version>v0.11-alpha</version>
+			<version>v0.12-alpha</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
