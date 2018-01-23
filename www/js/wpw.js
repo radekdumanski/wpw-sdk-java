@@ -1,5 +1,8 @@
-var car = "http://10.0.0.3:8000";
-var charger = "http://10.0.0.2:8008";
+// var car = "http://10.0.0.3:8000";
+// var charger = "http://10.0.0.2:8008";
+var car = "http://192.168.1.25:8000";
+var charger = "http://192.168.1.25:8008";
+
 var broadcasting = true;
 
 var oldStatus = '';
