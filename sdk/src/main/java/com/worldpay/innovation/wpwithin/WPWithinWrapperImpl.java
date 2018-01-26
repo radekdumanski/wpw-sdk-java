@@ -109,7 +109,6 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 		return this.cachedClient;
 	}
 
-	@SuppressWarnings("resource")
 	private WPWithin.Client openRpcListener() {
 
 		TTransport transport = new TSocket(hostConfig, portConfig);
@@ -118,6 +117,7 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 			transport.open();
 		} catch (TTransportException ex) {
 			logger.error("Could not open transport socket");
+			transport.close();
 			throw new WPWithinGeneralException("Could not open transport socket", ex);
 		}
 

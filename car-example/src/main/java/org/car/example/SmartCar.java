@@ -57,6 +57,7 @@ public class SmartCar {
 		updateFlow(JsonTags.UNITS, null);
 	}
 
+	//JSONObject relies on hashmap, causing warnings
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
 		TimeZone tz = TimeZone.getTimeZone("UTC");
@@ -237,6 +238,7 @@ public class SmartCar {
 		wpw.endServiceDelivery(serviceID, token, unitsToSupply);
 	}
 
+	//JSONObject relies on hashmap, causing warnings
 	@SuppressWarnings("unchecked")
 	private void updateFlow(JsonTags tag, String msg) {
 		this.jsonObject.put(tag.getTag(), msg);

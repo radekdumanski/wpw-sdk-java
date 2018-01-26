@@ -39,12 +39,14 @@ public class Charger {
 	public Charger() {
 		this.chargerJsonObject = new JSONObject();
 	}
-
+	
+	//JSONObject relies on hashmap, causing warnings
 	@SuppressWarnings("unchecked")
 	private void updateFlow(JsonTags tag, String msg) {
 		chargerJsonObject.put(tag.getTag(), msg);
 	}
-
+	
+	//JSONObject relies on hashmap, causing warnings
 	@SuppressWarnings("unchecked")
 	public JSONObject getChargerJsonObject() {
 		TimeZone tz = TimeZone.getTimeZone("UTC");
