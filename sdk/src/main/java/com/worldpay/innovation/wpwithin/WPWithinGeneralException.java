@@ -15,24 +15,22 @@ import org.slf4j.LoggerFactory;
  * @author worldpay
  */
 public class WPWithinGeneralException extends RuntimeException {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private String msg;
 	private static final Logger logger = LoggerFactory.getLogger(WPWithinGeneralException.class.getName());
-	
-    public WPWithinGeneralException(String msg) {
-    	logger.error(msg);
-    	this.msg = msg;
-    };
-    public WPWithinGeneralException(String msg, TException te) {
-    	logger.error(msg, te);
-    	this.msg = msg;
+
+	public WPWithinGeneralException(String msg) {
+		logger.error(msg);
+		this.msg = msg;
+	};
+
+	public WPWithinGeneralException(String msg, TException te) {
+		logger.error(msg, te);
+		this.msg = msg;
 	}
-    
-    @Override
-    public String getMessage() {
-    	return this.msg;
-    }
+
+	@Override
+	public String getMessage() {
+		return this.msg;
+	}
 }
