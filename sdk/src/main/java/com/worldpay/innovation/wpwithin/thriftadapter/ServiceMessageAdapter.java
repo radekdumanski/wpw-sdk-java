@@ -28,7 +28,7 @@ public class ServiceMessageAdapter {
 
     public static Set<WWServiceMessage> convertServiceMessages(Set<ServiceMessage> svcMsgs) {
 
-        Set<WWServiceMessage> wwServiceMessages = new HashSet();
+        Set<WWServiceMessage> wwServiceMessages = new HashSet<WWServiceMessage>();
 
         if (svcMsgs != null && svcMsgs.size() > 0) {
 

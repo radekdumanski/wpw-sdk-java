@@ -1,20 +1,16 @@
 package org.car.example;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TimeZone;
 
 import org.json.simple.JSONObject;
 
-import com.worldpay.innovation.wpwithin.PSPConfig;
 import com.worldpay.innovation.wpwithin.WPWithinGeneralException;
 import com.worldpay.innovation.wpwithin.WPWithinWrapper;
-import com.worldpay.innovation.wpwithin.types.WWHCECard;
 import com.worldpay.innovation.wpwithin.types.WWPaymentResponse;
 import com.worldpay.innovation.wpwithin.types.WWPrice;
 import com.worldpay.innovation.wpwithin.types.WWServiceDeliveryToken;
@@ -61,6 +57,7 @@ public class SmartCar {
 		updateFlow(JsonTags.UNITS, null);
 	}
 
+	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
 		TimeZone tz = TimeZone.getTimeZone("UTC");
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -240,6 +237,7 @@ public class SmartCar {
 		wpw.endServiceDelivery(serviceID, token, unitsToSupply);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void updateFlow(JsonTags tag, String msg) {
 		this.jsonObject.put(tag.getTag(), msg);
 	}

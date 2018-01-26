@@ -12,7 +12,11 @@ package com.worldpay.innovation.wpwithin.types;
  */
 public class WWError extends Exception {
 
-    //	1: string message
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	//	1: string message
     String message;
     
     

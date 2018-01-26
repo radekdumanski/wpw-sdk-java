@@ -109,6 +109,7 @@ public class WPWithinWrapperImpl implements WPWithinWrapper {
 		return this.cachedClient;
 	}
 
+	@SuppressWarnings("resource")
 	private WPWithin.Client openRpcListener() {
 
 		TTransport transport = new TSocket(hostConfig, portConfig);

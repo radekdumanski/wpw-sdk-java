@@ -40,10 +40,12 @@ public class Charger {
 		this.chargerJsonObject = new JSONObject();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void updateFlow(JsonTags tag, String msg) {
 		chargerJsonObject.put(tag.getTag(), msg);
 	}
 
+	@SuppressWarnings("unchecked")
 	public JSONObject getChargerJsonObject() {
 		TimeZone tz = TimeZone.getTimeZone("UTC");
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");

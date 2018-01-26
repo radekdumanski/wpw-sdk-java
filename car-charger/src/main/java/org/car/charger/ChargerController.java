@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.worldpay.innovation.wpwithin.WPWithinWrapper;
-
 @Controller
 public class ChargerController {
 

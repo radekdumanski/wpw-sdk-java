@@ -10,7 +10,6 @@
 		<artifactId>wpw-sdk-java</artifactId>
 		<version>v0.12-alpha</version>
 	</parent>
-	<groupId>com.worldpay.innovation</groupId>
 	<artifactId>car-charger</artifactId>
 	<name>car-charger</name>
 	<url>http://maven.apache.org</url>

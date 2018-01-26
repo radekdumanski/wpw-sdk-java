@@ -10,7 +10,6 @@
 	</parent>
 	<groupId>com.worldpay.innovation.wpw-sdk-java</groupId>
 	<artifactId>sdk</artifactId>
-	<version>v0.12-alpha</version>
 
 	<name>sdk</name>
 	<url>http://maven.apache.org</url>

@@ -2,8 +2,6 @@ package com.worldpay.innovation.wpwithin.producercallbackex;
 
 import java.util.Map;
 
-import com.worldpay.innovation.wpwithin.types.WWHCECard;
-
 public class Config {
 	private int port;
 	private int callbackPort;

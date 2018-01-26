@@ -6,8 +6,6 @@
 
 package com.worldpay.innovation.wpwithin.types;
 
-import java.nio.ByteBuffer;
-
 /**
  *
  * @author worldpay

@@ -1,14 +1,12 @@
 package com.worldpay.innovation.wpwithin.thriftadapter;
 
-import com.worldpay.innovation.wpwithin.rpc.types.Price;
-import com.worldpay.innovation.wpwithin.rpc.types.PricePerUnit;
-import com.worldpay.innovation.wpwithin.types.WWPrice;
-import com.worldpay.innovation.wpwithin.types.WWPricePerUnit;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import com.worldpay.innovation.wpwithin.rpc.types.Price;
+import com.worldpay.innovation.wpwithin.types.WWPrice;
 
 /**
  * Created by conor on 13/08/2016.
@@ -16,7 +14,7 @@ import java.util.Set;
 public class PriceAdapter {
 
     public static HashMap<Integer, WWPrice> convertPrices(Map<Integer, Price> prices) {
-        HashMap<Integer, WWPrice> wwPrices = new HashMap();
+        HashMap<Integer, WWPrice> wwPrices = new HashMap<Integer, WWPrice>();
 
         Set<Integer> keyset = prices.keySet();
 
@@ -40,7 +38,7 @@ public class PriceAdapter {
     }
 
     public static HashMap<Integer, Price> convertWWPrices(HashMap<Integer, WWPrice> wwPrices) {
-        HashMap<Integer, Price> prices = new HashMap();
+        HashMap<Integer, Price> prices = new HashMap<>();
 
         Set<Integer> keySet = wwPrices.keySet();
         if(keySet != null && keySet.size() > 0) {
@@ -61,7 +59,7 @@ public class PriceAdapter {
     }
 
     public static Set<WWPrice> convertServicePrices(Set<Price> prices) {
-        Set<WWPrice> wwPrices = new HashSet();
+        Set<WWPrice> wwPrices = new HashSet<>();
 
         if (prices != null && prices.size() > 0) {
 

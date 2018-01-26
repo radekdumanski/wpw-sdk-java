@@ -8,7 +8,6 @@
 		<artifactId>wpw-sdk-java</artifactId>
 		<version>v0.12-alpha</version>
 	</parent>
-	<groupId>com.worldpay.innovation</groupId>
 	<artifactId>car-example</artifactId>
 	<name>car-example</name>
 	<url>http://maven.apache.org</url>

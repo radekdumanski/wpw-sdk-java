@@ -1,5 +1,8 @@
 package com.worldpay.innovation.wpwithin.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,18 +13,14 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.Exchanger;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
-import org.junit.Before;
 //import org.junit.Rule;
 //import org.testng.Test;
 //import org.junit.rules.ExpectedException;
 //import org.junit.runner.RunWith;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 import com.google.gson.Gson;
 import com.worldpay.innovation.wpwithin.WPWithinGeneralException;
@@ -38,12 +37,10 @@ import com.worldpay.innovation.wpwithin.types.WWServiceDetails;
 import com.worldpay.innovation.wpwithin.types.WWServiceMessage;
 import com.worldpay.innovation.wpwithin.types.WWTotalPriceResponse;
 
-import junit.framework.AssertionFailedError;
 import net.jodah.concurrentunit.Waiter;
 
 public class E2ETest {
 	private static Config config;
-	private static String rpcLogFile;
 	private WPWithinWrapper wpw;
 	private UncaughtExceptionHandler eh;
 	private static Waiter waiter;
@@ -101,7 +98,7 @@ public class E2ETest {
 
 		// consumer
 		wpw.setup("consumerTest", "consumer test device", config.getInterfaceAddr());
-		String deviceUUID = wpw.getDevice().getUid();
+		assertNotNull(wpw.getDevice().getUid());
 		WWServiceMessage device = wpw.searchForDevice(7500, config.getProducerName());
 		// device discovery
 		assertNotNull("Desired device was not found.", device);

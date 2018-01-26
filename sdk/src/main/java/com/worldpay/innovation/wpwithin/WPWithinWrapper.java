@@ -3,7 +3,9 @@
  */
 package com.worldpay.innovation.wpwithin;
 
-import com.worldpay.innovation.wpwithin.eventlistener.EventListener;
+import java.util.Map;
+import java.util.Set;
+
 import com.worldpay.innovation.wpwithin.types.WWDevice;
 import com.worldpay.innovation.wpwithin.types.WWHCECard;
 import com.worldpay.innovation.wpwithin.types.WWPaymentResponse;
@@ -13,10 +15,6 @@ import com.worldpay.innovation.wpwithin.types.WWServiceDeliveryToken;
 import com.worldpay.innovation.wpwithin.types.WWServiceDetails;
 import com.worldpay.innovation.wpwithin.types.WWServiceMessage;
 import com.worldpay.innovation.wpwithin.types.WWTotalPriceResponse;
-
-import java.net.SocketException;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Worldpay Within Java Wrapper Interface to be coding against and will give

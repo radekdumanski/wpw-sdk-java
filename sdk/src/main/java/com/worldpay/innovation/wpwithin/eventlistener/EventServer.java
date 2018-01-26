@@ -1,6 +1,9 @@
 package com.worldpay.innovation.wpwithin.eventlistener;
 
 import com.worldpay.innovation.wpwithin.rpc.WPWithinCallback;
+import com.worldpay.innovation.wpwithin.rpc.WPWithinCallback.Iface;
+import com.worldpay.innovation.wpwithin.rpc.WPWithinCallback.Processor;
+
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TServerSocket;
@@ -17,12 +20,12 @@ public class EventServer {
     // Use this for a multithreaded server
     TServer server;
 
-    public void start(EventListener listener, final int port) {
+	public void start(EventListener listener, final int port) {
 
         try {
 
             final WPWithinCallback.Iface handler = new EventHandler(listener);
-            final WPWithinCallback.Processor processor = new WPWithinCallback.Processor(handler);
+			final Processor<Iface> processor = new WPWithinCallback.Processor<Iface>(handler);
 
             serverTransport = new TServerSocket(port);
 //            server = new TSimpleServer(new TServer.Args(serverTransport).processor(processor));

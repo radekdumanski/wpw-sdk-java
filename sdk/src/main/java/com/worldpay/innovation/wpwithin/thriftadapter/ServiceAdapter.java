@@ -13,7 +13,7 @@ import java.util.Set;
 public class ServiceAdapter {
 
     public static HashMap<Integer, WWService> convertServices(Map<Integer, Service> services) {
-        HashMap<Integer, WWService> wwServices = new HashMap();
+        HashMap<Integer, WWService> wwServices = new HashMap<Integer, WWService>();
 
         Set<Integer> keyset = services.keySet();
 

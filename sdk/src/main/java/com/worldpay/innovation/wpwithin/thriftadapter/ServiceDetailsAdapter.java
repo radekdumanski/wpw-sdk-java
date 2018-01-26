@@ -16,7 +16,7 @@ public class ServiceDetailsAdapter {
 
     public static Set<WWServiceDetails> convertServiceDetails(Set<ServiceDetails> svcDetails) {
 
-        Set<WWServiceDetails> wwSvcDetails = new HashSet();
+        Set<WWServiceDetails> wwSvcDetails = new HashSet<WWServiceDetails>();
 
         if (svcDetails != null && svcDetails.size() > 0) {
 

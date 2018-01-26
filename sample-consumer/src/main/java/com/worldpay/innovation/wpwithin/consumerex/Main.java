@@ -67,7 +67,7 @@ public class Main {
                         System.out.printf("Client ID: %s\n", tpr.getClientId());
                         System.out.printf("Server ID: %s\n", tpr.getServerId());
 
-                        WWPaymentResponse paymentResponse = purchaseService(svcDetail.getServiceId(), tpr);
+                        purchaseService(svcDetail.getServiceId(), tpr);
                     }
                 }
             }

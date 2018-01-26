@@ -15,6 +15,10 @@ import org.slf4j.LoggerFactory;
  * @author worldpay
  */
 public class WPWithinGeneralException extends RuntimeException {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String msg;
 	private static final Logger logger = LoggerFactory.getLogger(WPWithinGeneralException.class.getName());
 	
