@@ -65,11 +65,15 @@ function processJSON(jsonPath){
 	})
 	.always(function(){
 		//console.log("always");
-		var s = document.querySelector("div.line1").style;
-		if(s.borderColor == "black"){
-			s.borderColor = "white"
+		var s = document.getElementById("headerFrame");
+		if(s.classList.contains("frameOn")){
+			console.log("zapal");
+			s.classList.remove("frameOn");
+			s.classList.add("frameOff");
 		}else{
-			s.borderColor = "black"
+			console.log("zgas");
+			s.classList.remove("frameOff");
+			s.classList.add("frameOn");
 		}
 	})
 	;
