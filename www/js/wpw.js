@@ -93,7 +93,7 @@ function setArrow(arrow, style, name){
 				
 				arrow.setAttribute("state","on");
 				arrow.children[0].style.stroke = "rgb(0, 255, 0)";
-				arrow.children[0].style.fill = "rgb(0, 255, 0, 0.5)";
+				//arrow.children[0].style.fill = "rgba(0, 255, 0, 0.5)";
 				arrow.children[1].style.stroke = "rgb(0, 255, 0)";
 				//arrow.children[1].style.fill = "rgb(0, 255, 0, 0.5)";
 				arrow.style.opacity = 1;
