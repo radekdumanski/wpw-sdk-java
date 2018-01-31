@@ -22,7 +22,7 @@
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"><metadata
      id="metadata8"><rdf:RDF><cc:Work
          rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><defs
      id="defs6"><marker
        inkscape:stockid="Arrow2Mend"
        orient="auto"
@@ -537,13 +537,13 @@
      id="namedview4"
      showgrid="false"
      showguides="true"
-     inkscape:zoom="0.70710678"
-     inkscape:cx="763.10742"
-     inkscape:cy="519.30647"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="1586.6805"
+     inkscape:cy="418.69425"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="Search"><inkscape:grid
+     inkscape:current-layer="Intel_CPU_4"><inkscape:grid
        type="xygrid"
        id="grid10" /></sodipodi:namedview><g
      id="g293"
@@ -685,12 +685,6 @@
          x="116"
          data-name="blue rectangle border"
          id="blue_rectangle_border-3" /><text
-         transform="matrix(1.409,0,0,1.407,190.166,248.823)"
-         class="cls-1"
-         data-name="SGX Enclave"
-         id="SGX_Enclave-9"
-         style="font-weight:700;font-size:11.37199974px;font-family:Calibri;fill:#5a5a5a">SGX Enclave</text>
-<text
          transform="matrix(1.409,0,0,1.407,239.4,200.986)"
          class="cls-2"
          data-name="Intel CPU"
@@ -796,12 +790,6 @@
          y="190"
          data-name="blue rectangle border"
          id="blue_rectangle_border-4" /><text
-         transform="matrix(1.552,0,0,1.547,81.672,249.45)"
-         class="cls-1"
-         data-name="SGX Enclave"
-         id="SGX_Enclave-3"
-         style="font-weight:700;font-size:11.37199974px;font-family:Calibri;fill:#5a5a5a">SGX Enclave</text>
-<text
          transform="matrix(1.552,0,0,1.547,135.891,196.868)"
          class="cls-2"
          data-name="Intel CPU"
@@ -815,7 +803,14 @@
          style="font-weight:700;font-size:11.37199974px;font-family:Calibri;fill:#ffffff">WP applet and<tspan
    id="tspan687"
    dy="13.646">payment credentials</tspan></text>
-</g><image
+<image
+         xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAAANCAQAAACH32H7AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QAAKqNIzIAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAHdElNRQfiAQMQJzUo3UNBAAADKElEQVRIx8XVP27bWBAG8J8cFymZE4Q+gAD6BKFOYKV9jekyleUTyCq3ktztVpabB6QyfQJRJwgXbLJV6C6pltul8xaiFNkOFgmwi50HEI/D+fPN9+YNX/hfJKTDYviyaX/e85CQKJygdROrbUBjJ2BtGduQKrCMLYSJRLW1JYxlu4htXP5A3sJUpfoBy6eAQ2K1S1cYQChc7yxy03AU23Aq9caIkJtjH9a5fLevHn351+XAWKZzFAdGyp6va5RGceDYhVaKGfKQY/qN6z1ZGhkZufgv4XIoRRdb4vaI5ijjW4i12gLiMpzKTQO5zuxZpPtHLXLuSuJconIROwiFU5naVSy/uYXCiUyy0YfCqXW8hHDpjatYhtRUjtos1odapGFltkkYsh2fT2Uml0tx9Yzfx5LJZRJQ4IwwN0Etl9kBDrlrnVoil4cj5DKX4FziIiQ+SNRaY3k4PohLS+RWYRUyNmliTSjCql8pxEqJVLfh/IlMw0N4CA8h798TF3FghjEhMcFZPPbqERm1s/gqjuKxGuO41EnCmDCWaGNtKrGMx/GthcT5IfEsrE2lcqtwvBcs2V2lVNszt9Gn6meAK2uw5b6KC1Smkq1nXBIflRs7y5BJ+vNIUCqcKJ2g7D2TcNnvssM+0DJMzCUKfWPEOi4sCA+745tItVq5udEzwH3n/YM8L1JI3O5NGLhTGDuT46bXjY37XXewq3WxgRornc0keBp6itnetPhZyb6jm8iVXsXBdibHUicJhVQbtyVexEG/3h6GW50brVzeH+jM3DisXOmke6GTzU8hVHLXjp6kft0X0e3SPGM3XLuQm8ZvjfcabexCupepVPSDdeOZOw1lbAlj9QEKK59cYxmXxMWGRbdW/Q+kC2nPr/6ZhuIJpMLKysr8e+TGzSAs/Ol2Dxp3mIQPPvUzZatj2xAztcyn8BAe3EpfNO+H9zqdylXs729TDW/c++qzyo138eMwc+8u/gpNO7z3u67ZMTn8yx/W29XUw84X66ZmyF/WTUVTDdfo3HjXdFuL5uNwjZdmfvFF1bQ0H4cDa3ebad18Hb73xVeflX5T/Q0fe1qpLtO5MAAAAABJRU5ErkJggg=="
+         height="13"
+         width="88"
+         y="234.75119"
+         x="80.052399"
+         data-name="SGX Enclave"
+         id="SGX_Enclave-1" /></g><image
        xlink:href="data:img/png;base64,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"
        height="41"
        width="61"
@@ -1222,4 +1217,11 @@
          x="1361.9167"
          id="tspan9705"
          sodipodi:role="line">Broadcast</tspan></text>
-</g></svg>
+</g><image
+     xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAAANCAQAAACH32H7AAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QAAKqNIzIAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAHdElNRQfiAQMQJzUo3UNBAAADKElEQVRIx8XVP27bWBAG8J8cFymZE4Q+gAD6BKFOYKV9jekyleUTyCq3ktztVpabB6QyfQJRJwgXbLJV6C6pltul8xaiFNkOFgmwi50HEI/D+fPN9+YNX/hfJKTDYviyaX/e85CQKJygdROrbUBjJ2BtGduQKrCMLYSJRLW1JYxlu4htXP5A3sJUpfoBy6eAQ2K1S1cYQChc7yxy03AU23Aq9caIkJtjH9a5fLevHn351+XAWKZzFAdGyp6va5RGceDYhVaKGfKQY/qN6z1ZGhkZufgv4XIoRRdb4vaI5ijjW4i12gLiMpzKTQO5zuxZpPtHLXLuSuJconIROwiFU5naVSy/uYXCiUyy0YfCqXW8hHDpjatYhtRUjtos1odapGFltkkYsh2fT2Uml0tx9Yzfx5LJZRJQ4IwwN0Etl9kBDrlrnVoil4cj5DKX4FziIiQ+SNRaY3k4PohLS+RWYRUyNmliTSjCql8pxEqJVLfh/IlMw0N4CA8h798TF3FghjEhMcFZPPbqERm1s/gqjuKxGuO41EnCmDCWaGNtKrGMx/GthcT5IfEsrE2lcqtwvBcs2V2lVNszt9Gn6meAK2uw5b6KC1Smkq1nXBIflRs7y5BJ+vNIUCqcKJ2g7D2TcNnvssM+0DJMzCUKfWPEOi4sCA+745tItVq5udEzwH3n/YM8L1JI3O5NGLhTGDuT46bXjY37XXewq3WxgRornc0keBp6itnetPhZyb6jm8iVXsXBdibHUicJhVQbtyVexEG/3h6GW50brVzeH+jM3DisXOmke6GTzU8hVHLXjp6kft0X0e3SPGM3XLuQm8ZvjfcabexCupepVPSDdeOZOw1lbAlj9QEKK59cYxmXxMWGRbdW/Q+kC2nPr/6ZhuIJpMLKysr8e+TGzSAs/Ol2Dxp3mIQPPvUzZatj2xAztcyn8BAe3EpfNO+H9zqdylXs729TDW/c++qzyo138eMwc+8u/gpNO7z3u67ZMTn8yx/W29XUw84X66ZmyF/WTUVTDdfo3HjXdFuL5uNwjZdmfvFF1bQ0H4cDa3ebad18Hb73xVeflX5T/Q0fe1qpLtO5MAAAAABJRU5ErkJggg=="
+     height="13"
+     width="88"
+     y="905.05792"
+     x="212.34464"
+     data-name="SGX Enclave"
+     id="SGX_Enclave-0" /></svg>
