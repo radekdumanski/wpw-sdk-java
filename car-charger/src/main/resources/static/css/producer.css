@@ -8,15 +8,20 @@
 	padding:0.5em;
 	border-style: solid;
     border-color: #385D8A;
+    border-width: 1px;
 }
 #JSON-on-LCD > div {
 	line-height:9vh;
 }
 #JSON-on-LCD > div.line1 {
-	border-style: solid;
-	transition : border 500ms ease-out;
-	height:2.5em;
-	align-items:center;
+	border-radius: 2vw;
+    border-width: 2px;
+    border-style: solid;
+    transition: border 500ms ease-out;
+    height: 2.5em;
+    align-items: center;
+    position: relative;
+    padding: 1vw;
 }
 
 .frameOn {
