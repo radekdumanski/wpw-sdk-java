@@ -1,11 +1,11 @@
 // var car = "http://10.0.0.3:8000";
 // var charger = "http://10.0.0.2:8008";
 
-// var car = "http://127.0.0.1:8000";
-// var charger = "http://127.0.0.1:8008";
+var car = "http://127.0.0.1:8000";
+var charger = "http://127.0.0.1:8008";
 
-var car = "http://192.168.1.25:8000";
-var charger = "http://192.168.1.25:8008";
+// var car = "http://192.168.1.25:8000";
+// var charger = "http://192.168.1.25:8008";
 
 var broadcasting = true;
 
@@ -131,11 +131,9 @@ function setCarDisplay(svg, data){
 	}
 	if(a7 === undefined){
 		a7 = svg.getElementById("batt");
-		a7.style.textShadow = "1px 1px 1px black";
 	}
 	if(data.hasOwnProperty('battery')){
 		a7.textContent = data['battery']+"%";
-		a7.style.opacity = MAX_OPACITY;
 	}
 	updateConsumerState(data);
 }
@@ -488,7 +486,6 @@ function setChargerDisplay(svg, data){
 		a6.onclick = toggleBroadcast;
 		a2.onclick = plugItIn;
 		a7.textContent = "";
-		a7.style.textShadow = "1px 1px 1px black";
 	}
 
 	updateProducerState(data);
