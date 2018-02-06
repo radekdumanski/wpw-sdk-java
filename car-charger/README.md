@@ -14,6 +14,7 @@
 1. cd %userprofile%
 2. git clone https://github.com/WPTechInnovation/wpw-sdk-java.git
 3. cd wpw-sdk-java
+3. git checkout develop
 4. git submodule init
 5. git submodule update
 6. mvn
@@ -24,4 +25,4 @@
 
   offline - http://192.168.0.1:8080/v1 - in this case we need to configure ip and port of offline server;  
   online - https://api.worldpay.com/v1.  
-* There is an autostart batch script for Intel Compute Stick inside the repository (%userprofile%\wpw-sdk-sgx\sgx_car_demo\car-charger\charger.bat), simply copy it to Windows autostart folder (C:\Users\charger\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup)
+* There is an autostart batch script for Intel Compute Stick inside the repository (%userprofile%\wpw-sdk-java\car-charger\charger.bat), simply copy it to Windows autostart folder (C:\Users\charger\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup)
