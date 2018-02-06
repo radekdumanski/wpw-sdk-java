@@ -12,6 +12,6 @@
 	},
 	"pspConfig": {
 		"psp_name": "worldpayonlinepayments",
-		"api_endpoint": "http://192.168.1.64:8080/v1"
+		"api_endpoint": "https://api.worldpay.com/v1"
 	}
 }

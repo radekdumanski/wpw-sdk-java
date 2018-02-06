@@ -194,19 +194,19 @@ function updateConsumerState(data){
 	case "Device discovery phase.":  // before .searchForDevice
 		paintCharge("off");
 		paintSearch("on");
-		paintDiscover("on");
+		paintDiscover("off");
 		paintPay("off");
 		break;
 	case "Trying to establish connection...":  // before .initConsumer
 		paintCharge("off");
 		paintSearch("on");
-		paintDiscover("off");
+		paintDiscover("on");
 		paintPay("off");
 		break;
 	case "Service query phase.":  // before .requestServices
 		paintCharge("off");
-		paintSearch("on");
-		paintDiscover("off");
+		paintSearch("off");
+		paintDiscover("on");
 		paintPay("off");
 		break;
 	// after .getServicePrices - not strightforward
@@ -239,7 +239,7 @@ function updateConsumerState(data){
 			case "Selecting service...":
 				paintCharge("off");
 				paintSearch("off");
-				paintDiscover("off");
+				paintDiscover("on");
 				paintPay("off");
 				break;
 			default:
