@@ -15,13 +15,14 @@
 		<img src="/images/battery.png" id="batteryIcon"></img>
 		<div id="battery"
 			class="battery outer"
-			><div class="battery fg" id="batteryChargeBar"
+			><input type="range" min="1" max="100" value="0" step="1" class="slider" id="battRange"
+			    /><div class="battery fg" id="batteryChargeBar"
 				><div class="battery text" id="batteryValText">54%</div
 			><div class="battery bg" id="batteryBackgBar"></div
 			></div>
 		</div>
 		<div id="commDetails">Communication Details</div>
-		<div id="pluginButton"><span id="rechargeButton">Charge Car Button</span></div>
+		<div class="footer"><div id="pluginButton"><span id="rechargeButton">Charge Car Button</span></div></div>
 	</div>
 	<script src="js/car-example.js"></script>
 </body>
