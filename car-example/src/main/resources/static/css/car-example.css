@@ -1,3 +1,27 @@
+
+.watermark {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 101%;
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+.watermark::after {
+    content: "";
+    background: url(/images/car_bg_bigger.png);
+    opacity: 0.1;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-size: 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-position-x: center;
+    background-position-y: center;
+    background-attachment: fixed;
+}
+
 div.outerFrame {
 	border:1px solid #385d8a;
 	position:absolute;
