@@ -1,12 +1,34 @@
+
+.watermark {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    top: 0;
+}
+.watermark::after {
+    content: "";
+    background: url(/images/padlock.png);
+    opacity: 0.1;
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    background-size: 40%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-position-x: center;
+    background-position-y: center;
+    background-attachment: fixed;
+}
+
 #JSON-on-LCD {
-	margin:2vh 2vw 0px 2vw;
-	font-size:7vmin;
-	max-width: 96vw;
-	max-height: 96vh;
-	width:96vw;
-	height:96vh;
-	padding:0.5em;
-	border-style: solid;
+    /* margin: 0px 0px 0px 0px; */
+    font-size: 7vmin;
+    height: 100vh;
+    padding: 0.5em;
+    border-style: solid;
     border-color: #385D8A;
     border-width: 1px;
 }
